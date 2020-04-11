@@ -4,15 +4,15 @@ export const managerData = [
 
 export const nationalAverageData = [
     4010, 3600, 2900, 3550, 3800, 2900, 3000, 3500, 4000, 3700, 3550, 3800
-]
+];
 
 export const managerQuarterData = [
     500, 390, 670, 600, 780, 440, 600, 680, 550, 475, 700, 795
-]
+];
 
 export const nationalAverageQuarterData = [
     600, 400, 600, 550, 700, 500, 600, 700, 500, 550, 600, 700
-]
+];
 
 
 //---Labels---//

@@ -9,7 +9,7 @@ export default class Dashboard extends Component {
         data: managerData,
         average: nationalAverageData,
         labels: yearLabels
-    }
+    };
 
     handleButtonClick = e => {
         const { value } = e.target;
@@ -24,7 +24,7 @@ export default class Dashboard extends Component {
             average: newAverage,
             labels: newLabels
         })
-    }
+    };
 
     render() {
         const { data, average, labels } = this.state;
