@@ -1,6 +1,6 @@
-import { Q } from "./Utils/enums";
-export const units = "Thousands";
-export const transactionRevenue = [
+import { Q } from "./utils/enums";
+const units = "Thousands";
+const transactionRevenue = [
     403478,
     482065,
     510019,
@@ -15,7 +15,7 @@ export const transactionRevenue = [
     832180,
 ];
 
-export const serviceRevenue = [
+const serviceRevenue = [
     49060,
     59151,
     65051,
@@ -30,7 +30,7 @@ export const serviceRevenue = [
     281415,
 ];
 
-export const hardwareRevenue = [
+const hardwareRevenue = [
     9016,
     10289,
     10089,
@@ -45,7 +45,7 @@ export const hardwareRevenue = [
     22267,
 ];
 
-export const bitcoinRevenue = [
+const bitcoinRevenue = [
     0,
     0,
     0,
@@ -60,7 +60,7 @@ export const bitcoinRevenue = [
     177567
 ];
 
-export const quarterLabels = [Q.Q1_17,
+const quarterLabels = [Q.Q1_17,
     Q.Q2_17,
     Q.Q3_17,
     Q.Q4_17,
@@ -74,7 +74,7 @@ export const quarterLabels = [Q.Q1_17,
     Q.Q4_19,
 ];
 
-export const transactionCostOfGoods = [
+const transactionCostOfGoods = [
     257778,
     311092,
     328043,
@@ -89,7 +89,63 @@ export const transactionCostOfGoods = [
     519241,
 ];
 
-export const getTotalRevenue = function() {
+const serviceCostOfGoods = [
+    15876,
+    17116,
+    18169,
+    24559,
+    30368,
+    39784,
+    47078,
+    52654,
+    60523,
+    60119,
+    63352,
+    50276
+];
+
+const hardwareCostOfGoods = [
+    12662,
+    14173,
+    18775,
+    16783,
+    19702,
+    25536,
+    23229,
+    25647,
+    26941,
+    33268,
+    35672,
+    40504,
+];
+
+const bitcoinCostOfGoods = [
+    0, 0, 0, 0, 33872,
+    36596,
+    42408,
+    51951,
+    64696,
+    122938,
+    146167,
+    174438,
+];
+
+const totalCostOfGoods = [
+    288123,
+    344076,
+    366543,
+    376205,
+    413433,
+    499122,
+    529448,
+    552474,
+    562605,
+    708393,
+    766437,
+    786380,
+];
+
+const getTotalRevenue = function() {
     let totalRevenue = [];
 
     for(let i = 0; i < quarterLabels.length; i++) {
@@ -97,4 +153,19 @@ export const getTotalRevenue = function() {
     }
 
     return totalRevenue;
+};
+
+export const SQ = {
+    getTotalRevenue,
+    totalCostOfGoods,
+    bitcoinCostOfGoods,
+    hardwareCostOfGoods,
+    transactionCostOfGoods,
+    serviceCostOfGoods,
+    serviceRevenue,
+    transactionRevenue,
+    quarterLabels,
+    bitcoinRevenue,
+    hardwareRevenue,
+    units,
 };

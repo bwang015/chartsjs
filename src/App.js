@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import Dashboard from "./views/Dashboard/Dashboard";
+import SquareDashboard from "./views/Dashboard/SquareDashboard";
 
 class App extends Component {
   render() {
     return (
-      <Dashboard />
+      <SquareDashboard />
     );
   }
 }

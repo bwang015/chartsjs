@@ -24,3 +24,14 @@ export const Color = {
     ORANGE: "#FFA500",
     SILVER: "#C0C0C0",
 };
+
+export const GraphNames = {
+    REVENUE_SEGMENTS: 'revenue_segments',
+    REVENUE_SEGMENTS_OPTIONS: 'revenue_segment_options',
+    GROSS_PROFIT_SEGMENTS: 'gross_profit_segments',
+    GROSS_PROFIT_SEGMENTS_OPTIONS: 'gross_profit_segments_options',
+    REVENUE_PERCENTAGE: 'revenue_percentage',
+    REVENUE_PERCENTAGE_OPTIONS: 'revenue_percentage_options',
+    REVENUE_YOY: 'revenue_yoy',
+    REVENUE_YOY_OPTIONS: 'revenue_yoy_options',
+};
