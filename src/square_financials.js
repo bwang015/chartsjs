@@ -45,10 +45,22 @@ export const hardwareRevenue = [
     22267,
 ];
 
-export const bitcoinRevenue = [0, 0, 0, 0, 34095, 37016, 42963, 52443, 65528, 125085, 148285, 177567];
+export const bitcoinRevenue = [
+    0,
+    0,
+    0,
+    0,
+    34095,
+    37016,
+    42963,
+    52443,
+    65528,
+    125085,
+    148285,
+    177567
+];
 
-export const quarterLabels = [
-    Q.Q1_17,
+export const quarterLabels = [Q.Q1_17,
     Q.Q2_17,
     Q.Q3_17,
     Q.Q4_17,
@@ -61,3 +73,28 @@ export const quarterLabels = [
     Q.Q3_19,
     Q.Q4_19,
 ];
+
+export const transactionCostOfGoods = [
+    257778,
+    311092,
+    328043,
+    333377,
+    327911,
+    395349,
+    414456,
+    420846,
+    409069,
+    490349,
+    519312,
+    519241,
+];
+
+export const getTotalRevenue = function() {
+    let totalRevenue = [];
+
+    for(let i = 0; i < quarterLabels.length; i++) {
+        totalRevenue.push(transactionRevenue[i] + serviceRevenue[i] + bitcoinRevenue[i] + hardwareRevenue[i]);
+    }
+
+    return totalRevenue;
+};

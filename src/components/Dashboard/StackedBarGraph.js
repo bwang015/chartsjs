@@ -1,16 +1,7 @@
 import React, { Component } from 'react'
 import Chart from "chart.js";
-import classes from "./StackedBarGraph.module.css";
-import { Color } from "./../../Utils/enums";
-import {
-    transactionRevenue,
-    serviceRevenue,
-    hardwareRevenue,
-    quarterLabels,
-    bitcoinRevenue,
-    units,
-} from "../../square_financials";
-let myLineChart;
+import classes from "./Graph.module.css";
+let stackedBarGraph;
 
 //--Chart Style Options--//
 Chart.defaults.global.defaultFontFamily = "'PT Sans', sans-serif"
@@ -30,35 +21,14 @@ export default class StackedBarGraph extends Component {
     buildChart = () => {
         const myChartRef = this.chartRef.current.getContext("2d");
 
-        if (typeof myLineChart !== "undefined") myLineChart.destroy();
+        if (typeof stackedBarGraph !== "undefined") stackedBarGraph.destroy();
+        const { labels, datasets, units } = this.props;
 
-        myLineChart = new Chart(myChartRef, {
+        stackedBarGraph = new Chart(myChartRef, {
             type: "bar",
             data: {
-                labels: quarterLabels,
-                datasets: [
-                    {
-                        label: "Transaction Revenue",
-                        data: transactionRevenue,
-                        fill: false,
-                        backgroundColor: Color.BLUE,
-                    },
-                    {
-                        label: "Service Revenue",
-                        data: serviceRevenue,
-                        backgroundColor: Color.RED,
-                    },
-                    {
-                        label: "Hardware Revenue",
-                        data: hardwareRevenue,
-                        backgroundColor: Color.BLACK,
-                    },
-                    {
-                        label: "Bitcoin Revenue",
-                        data: bitcoinRevenue,
-                        backgroundColor: Color.ORANGE,
-                    }
-                ]
+                labels: labels,
+                datasets: datasets
             },
             options: {
                 title: {

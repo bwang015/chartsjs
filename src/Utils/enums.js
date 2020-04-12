@@ -22,4 +22,5 @@ export const Color = {
     RED: "#FF0000",
     BLACK: "#000000",
     ORANGE: "#FFA500",
+    SILVER: "#C0C0C0",
 };
