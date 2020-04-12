@@ -21,7 +21,7 @@ export const getRevenuePercentage = function (revenue, totalRevenue) {
 export const getRevenueYOY = function (revenue) {
     let res = [];
     for (let i = 0; i < revenue.length; i++) {
-        if(i < 4 || revenue[i-4] == 0) { // So we don't divide by 0
+        if(i < 4 || revenue[i-4] === 0) { // So we don't divide by 0
             res.push(0);
         } else {
             console.log(revenue[i] + " : " + revenue[i-4]);

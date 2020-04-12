@@ -1,8 +1,7 @@
 {
-  "name": "chartjs_demo",
+  "name": "stock_dashboard",
   "version": "0.1.0",
-  "description": "Walkthrough demo for ChartJS in React",
-  "author": "Ryan Brockhoff <brockhoffrw@gmail.com>",
+  "author": "Boyang Wang <boyangwang015@gmail.com>",
   "private": true,
   "dependencies": {
     "chart.js": "^2.9.3",
