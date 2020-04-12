@@ -24,7 +24,6 @@ export const getRevenueYOY = function (revenue) {
         if(i < 4 || revenue[i-4] === 0) { // So we don't divide by 0
             res.push(0);
         } else {
-            console.log(revenue[i] + " : " + revenue[i-4]);
             res.push(((revenue[i] - revenue[i-4]) * 100 / revenue[i-4]).toFixed(2));
         }
     }

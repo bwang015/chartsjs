@@ -8,8 +8,11 @@ import {
     getFreeCashFlow,
     getShareholderEquity
 } from "../../utils/common_utils";
-import {Color, GraphNames} from "../../utils/enums";
+import {Color, GraphNames, GraphType} from "../../utils/enums";
 import LineChart from "../../components/LineChart";
+import _ from "lodash";
+import { Options } from "../../utils/common_objects";
+import {setGraphTitle, setYAxesLabel, stackGraphs, setBarDataValues, setLineDataValues} from "../../utils/graph_helper";
 
 export default class SquareDashboard extends Component {
     constructor() {
@@ -35,185 +38,60 @@ export default class SquareDashboard extends Component {
     }
 
     getRevenueSegmentsData() {
+        let options = _.cloneDeep(Options);
+        setGraphTitle(options, 'Revenue By Segments');
+        setYAxesLabel(options, 'Percentage (%)');
+        stackGraphs(options);
+
         this.setState({
             [GraphNames.REVENUE_SEGMENTS]: {
                 labels: SQ.quarterLabels,
                 datasets: [
-                    {
-                        label: 'Transactional Revenue',
-                        data: SQ.transactionRevenue,
-                        fill: false,
-                        backgroundColor: Color.BLUE,
-                    },
-                    {
-                        label: "Service Revenue",
-                        data: SQ.serviceRevenue,
-                        backgroundColor: Color.RED,
-                    },
-                    {
-                        label: "Hardware Revenue",
-                        data: SQ.hardwareRevenue,
-                        backgroundColor: Color.SILVER,
-                    },
-                    {
-                        label: "Bitcoin Revenue",
-                        data: SQ.bitcoinRevenue,
-                        backgroundColor: Color.ORANGE,
-                    },
-                    {
-                        label: "Total Revenue",
-                        data: this.totalRevenue,
-                        fill: false,
-                        type: 'line',
-                        borderColor: Color.BLACK,
-                    }
+                    setBarDataValues('Transactional Revenue', SQ.transactionRevenue, Color.BLUE),
+                    setBarDataValues('Service Revenue', SQ.serviceRevenue, Color.RED),
+                    setBarDataValues('Hardware Revenue', SQ.hardwareRevenue, Color.SILVER),
+                    setBarDataValues('Bitcoin Revenue', SQ.bitcoinRevenue, Color.ORANGE),
+                    setLineDataValues('Total Revenue', this.totalRevenue, Color.BLACK),
                 ],
             },
-            [GraphNames.REVENUE_SEGMENTS_OPTIONS]: {
-                title: {
-                    text: "Revenue by Segments",
-                    display: true,
-                },
-                legend: {
-                    display: true,
-                },
-                scales: {
-                    xAxes: [{
-                        stacked: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Quarter',
-                        }
-                    }],
-                    yAxes: [{
-                        stacked: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'In ' + SQ.units,
-                        }
-                    }]
-                }
-            }
+            [GraphNames.REVENUE_SEGMENTS_OPTIONS]: options
         });
     }
 
     getGrossProfitData() {
+        let options = _.cloneDeep(Options);
+        setGraphTitle(options, 'Gross Revenue Margins by Segments');
+        setYAxesLabel(options, 'In ' + SQ.units);
         this.setState({
             [GraphNames.GROSS_PROFIT_SEGMENTS]: {
                 labels: SQ.quarterLabels,
                 datasets: [
-                    {
-                        label: 'Transactional Revenue Profit Margin',
-                        data: getGrossProfit(SQ.transactionRevenue, SQ.transactionCostOfGoods),
-                        fill: false,
-                        borderColor: Color.BLUE,
-                    },
-                    {
-                        label: 'Service Revenue Profit Margin',
-                        data: getGrossProfit(SQ.serviceRevenue, SQ.serviceCostOfGoods),
-                        fill: false,
-                        borderColor: Color.RED,
-                    },
-                    {
-                        label: 'Hardware Revenue Profit Margin',
-                        data: getGrossProfit(SQ.hardwareRevenue, SQ.hardwareCostOfGoods),
-                        fill: false,
-                        borderColor: Color.SILVER,
-                    },
-                    {
-                        label: 'Bitcoin Revenue Profit Margin',
-                        data: getGrossProfit(SQ.bitcoinRevenue, SQ.bitcoinCostOfGoods),
-                        fill: false,
-                        borderColor: Color.ORANGE,
-                    },
-                    {
-                        label: 'Total Gross Profit Margin',
-                        data: getGrossProfit(this.totalRevenue, SQ.totalCostOfGoods),
-                        fill: false,
-                        borderColor: Color.BLACK,
-                    },
+                    setLineDataValues('Transactional Revenue Profit Margin', getGrossProfit(SQ.transactionRevenue, SQ.transactionCostOfGoods), Color.BLUE),
+                    setLineDataValues('Service Revenue Profit Margin', getGrossProfit(SQ.serviceRevenue, SQ.serviceCostOfGoods), Color.RED),
+                    setLineDataValues('Hardware Revenue Profit Margin', getGrossProfit(SQ.hardwareRevenue, SQ.hardwareCostOfGoods), Color.SILVER),
+                    setLineDataValues('Bitcoin Revenue Profit Margin', getGrossProfit(SQ.bitcoinRevenue, SQ.bitcoinCostOfGoods), Color.ORANGE),
+                    setLineDataValues('Total Gross Profit Margin', getGrossProfit(this.totalRevenue, SQ.totalCostOfGoods), Color.BLACK),
                 ],
             },
-            [GraphNames.GROSS_PROFIT_SEGMENTS_OPTIONS]: {
-                title: {
-                    text: "Gross Revenue Margins by Segments",
-                    display: true,
-                },
-                legend: {
-                    display: true,
-                },
-                scales: {
-                    xAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Quarter',
-                        }
-                    }],
-                    yAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Percentage (%)',
-                        }
-                    }]
-                }
-            }
+            [GraphNames.GROSS_PROFIT_SEGMENTS_OPTIONS]: options
         });
     }
 
     getRevenueBySegmentPercentageData() {
+        let options = _.cloneDeep(Options);
+        setGraphTitle(options, 'Gross Revenue Margins by Segments');
+        setYAxesLabel(options, 'In ' + SQ.units);
         this.setState({
             [GraphNames.REVENUE_PERCENTAGE]: {
                 labels: SQ.quarterLabels,
                 datasets: [
-                    {
-                        label: 'Transactional Revenue',
-                        data: getRevenuePercentage(SQ.transactionRevenue, this.totalRevenue),
-                        fill: false,
-                        backgroundColor: Color.BLUE,
-                    },
-                    {
-                        label: 'Service Revenue',
-                        data: getRevenuePercentage(SQ.serviceRevenue, this.totalRevenue),
-                        fill: false,
-                        backgroundColor: Color.RED,
-                    },
-                    {
-                        label: 'Hardware Revenue',
-                        data: getRevenuePercentage(SQ.hardwareRevenue, this.totalRevenue),
-                        fill: false,
-                        backgroundColor: Color.SILVER,
-                    },
-                    {
-                        label: 'Bitcoin Revenue',
-                        data: getRevenuePercentage(SQ.bitcoinRevenue, this.totalRevenue),
-                        fill: false,
-                        backgroundColor: Color.ORANGE,
-                    },
+                    setBarDataValues('Transactional Revenue', getRevenuePercentage(SQ.transactionRevenue, this.totalRevenue), Color.BLUE),
+                    setBarDataValues('Service Revenue', getRevenuePercentage(SQ.serviceRevenue, this.totalRevenue), Color.RED),
+                    setBarDataValues('Hardware Revenue', getRevenuePercentage(SQ.hardwareRevenue, this.totalRevenue), Color.SILVER),
+                    setBarDataValues('Bitcoin Revenue', getRevenuePercentage(SQ.bitcoinRevenue, this.totalRevenue), Color.ORANGE),
                 ],
             },
-            [GraphNames.REVENUE_PERCENTAGE_OPTIONS]: {
-                title: {
-                    text: "Gross Revenue Margins by Segments",
-                    display: true,
-                },
-                legend: {
-                    display: true,
-                },
-                scales: {
-                    xAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Quarter',
-                        }
-                    }],
-                    yAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Percentage (%)',
-                        }
-                    }]
-                }
-            }
+            [GraphNames.REVENUE_PERCENTAGE_OPTIONS]: options,
         });
     }
 
