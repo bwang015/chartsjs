@@ -96,275 +96,90 @@ export default class SquareDashboard extends Component {
     }
 
     getRevenueYOYData() {
+        let options = _.cloneDeep(Options);
+        setGraphTitle(options, 'Revenue Y/Y By Segments');
+        setYAxesLabel(options, 'Percentage (%)');
         this.setState({
             [GraphNames.REVENUE_YOY]: {
                 labels: SQ.quarterLabels,
                 datasets: [
-                    {
-                        label: 'Transactional Revenue Y/Y Growth',
-                        data: getRevenueYOY(SQ.transactionRevenue),
-                        fill: false,
-                        borderColor: Color.BLUE,
-                    },
-                    {
-                        label: 'Service Revenue Y/Y Growth',
-                        data: getRevenueYOY(SQ.serviceRevenue),
-                        fill: false,
-                        borderColor: Color.RED,
-                    },
-                    {
-                        label: 'Hardware Revenue Y/Y Growth',
-                        data: getRevenueYOY(SQ.hardwareRevenue),
-                        fill: false,
-                        borderColor: Color.SILVER,
-                    },
-                    {
-                        label: 'Bitcoin Revenue Y/Y Growth',
-                        data: getRevenueYOY(SQ.bitcoinRevenue),
-                        fill: false,
-                        borderColor: Color.ORANGE,
-                    },
-                    {
-                        label: 'Total Revenue Y/Y Growth',
-                        data: getRevenueYOY(this.totalRevenue),
-                        fill: false,
-                        borderColor: Color.BLACK,
-                    },
+                    setLineDataValues('Transactional Revenue Y/Y Growth', getRevenueYOY(SQ.transactionRevenue), Color.BLUE),
+                    setLineDataValues('Service Revenue Y/Y Growth', getRevenueYOY(SQ.serviceRevenue), Color.RED),
+                    setLineDataValues('Hardware Revenue Y/Y Growth', getRevenueYOY(SQ.hardwareRevenue), Color.SILVER),
+                    setLineDataValues('Bitcoin Revenue Y/Y Growth', getRevenueYOY(SQ.bitcoinRevenue), Color.ORANGE),
+                    setLineDataValues('Total Revenue Y/Y Growth', getRevenueYOY(this.totalRevenue), Color.BLACK),
                 ],
             },
-            [GraphNames.REVENUE_YOY_OPTIONS]: {
-                title: {
-                    text: "Revenue Y/Y By Segments",
-                    display: true,
-                },
-                legend: {
-                    display: true,
-                },
-                scales: {
-                    xAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Quarter',
-                        }
-                    }],
-                    yAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Percentage (%)',
-                        }
-                    }]
-                }
-            }
+            [GraphNames.REVENUE_YOY_OPTIONS]: options,
         });
     }
 
     getRevenueOperatingIncomeExpensesData() {
+        let options = _.cloneDeep(Options);
+        setGraphTitle(options, 'Revenue, Operating Income and Expenses, and Net Income');
+        setYAxesLabel(options, 'In ' + SQ.units);
         this.setState({
             [GraphNames.REVENUE_OPERATIONS]: {
                 labels: SQ.quarterLabels,
                 datasets: [
-                    {
-                        label: 'Total Revenue',
-                        data: this.totalRevenue,
-                        fill: false,
-                        backgroundColor: Color.BLUE,
-                    },
-                    {
-                        label: 'Total Operating Expenses',
-                        data: SQ.totalOperatingExpenses,
-                        fill: false,
-                        backgroundColor: Color.RED,
-                    },
-                    {
-                        label: 'Total Operating Income',
-                        data: SQ.totalOperatingIncome,
-                        fill: false,
-                        backgroundColor: Color.BLACK,
-                    },
-                    {
-                        label: 'Net Income',
-                        data: SQ.netIncome,
-                        fill: false,
-                        backgroundColor: Color.ORANGE,
-                    },
+                    setBarDataValues('Total Revenue', this.totalRevenue, Color.BLUE),
+                    setBarDataValues('Total Operating Expenses', SQ.totalOperatingExpenses, Color.RED),
+                    setBarDataValues('Total Operating Income', SQ.totalOperatingIncome, Color.SILVER),
+                    setBarDataValues('Net Income', SQ.netIncome, Color.GREEN),
                 ],
             },
-            [GraphNames.REVENUE_OPERATIONS_OPTIONS]: {
-                title: {
-                    text: "Revenue, Operating Income and Expenses, and Net Income",
-                    display: true,
-                },
-                legend: {
-                    display: true,
-                },
-                scales: {
-                    xAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Quarter',
-                        }
-                    }],
-                    yAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Percentage (%)',
-                        }
-                    }]
-                }
-            }
+            [GraphNames.REVENUE_OPERATIONS_OPTIONS]: options,
         });
     }
 
     getCashAndDebt() {
+        let options = _.cloneDeep(Options);
+        setGraphTitle(options, 'Cash and Debt');
+        setYAxesLabel(options, 'In ' + SQ.units);
         this.setState({
             [GraphNames.CASH]: {
                 labels: SQ.quarterLabels,
                 datasets: [
-                    {
-                        label: 'Cash and Cash Equivalents',
-                        data: SQ.cash,
-                        fill: false,
-                        backgroundColor: Color.BLUE,
-                    },
-                    {
-                        label: 'Current Debt',
-                        data: SQ.currentDebt,
-                        fill: false,
-                        backgroundColor: Color.RED,
-                    },
-                    {
-                        label: 'Long Term Debt',
-                        data: SQ.longTermDebt,
-                        fill: false,
-                        backgroundColor: Color.SILVER,
-                    },
+                    setBarDataValues('Cash and Cash Equivalents', SQ.cash, Color.BLUE),
+                    setBarDataValues('Short Term Debt', SQ.currentDebt, Color.RED),
+                    setBarDataValues('Long Term Debt', SQ.longTermDebt, Color.SILVER),
                 ],
             },
-            [GraphNames.CASH_OPTIONS]: {
-                title: {
-                    text: "Cash, and Debt",
-                    display: true,
-                },
-                legend: {
-                    display: true,
-                },
-                scales: {
-                    xAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Quarter',
-                        }
-                    }],
-                    yAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'In ' + SQ.units,
-                        }
-                    }]
-                }
-            }
+            [GraphNames.CASH_OPTIONS]: options,
         });
     }
 
     getFreeCashFlow() {
+        let options = _.cloneDeep(Options);
+        setGraphTitle(options, 'Free Cash Flow');
+        setYAxesLabel(options, 'In ' + SQ.units);
         this.setState({
             [GraphNames.FREE_CASH_FLOW]: {
                 labels: SQ.quarterLabels,
                 datasets: [
-                    {
-                        label: 'Cash From Operations',
-                        data: SQ.cashFromOperations,
-                        fill: false,
-                        backgroundColor: Color.BLUE,
-                    },
-                    {
-                        label: 'Cash From Investing',
-                        data: SQ.cashFromInvesting,
-                        fill: false,
-                        backgroundColor: Color.RED,
-                    },
-                    {
-                        label: 'Free Cash Flow',
-                        data: getFreeCashFlow(SQ.cashFromOperations, SQ.cashFromInvesting),
-                        fill: false,
-                        backgroundColor: Color.GREEN,
-                    },
+                    setBarDataValues('Cash From Operations', SQ.cashFromOperations, Color.BLUE),
+                    setBarDataValues('Cash From Investing', SQ.cashFromInvesting, Color.RED),
+                    setBarDataValues('Free Cash Flow', getFreeCashFlow(SQ.cashFromOperations, SQ.cashFromInvesting), Color.GREEN),
                 ],
             },
-            [GraphNames.FREE_CASH_FLOW_OPTIONS]: {
-                title: {
-                    text: "Free Cash Flow",
-                    display: true,
-                },
-                legend: {
-                    display: true,
-                },
-                scales: {
-                    xAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Quarter',
-                        }
-                    }],
-                    yAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'In ' + SQ.units,
-                        }
-                    }]
-                }
-            }
+            [GraphNames.FREE_CASH_FLOW_OPTIONS]: options,
         });
     }
 
     getShareholderEquityData() {
+        let options = _.cloneDeep(Options);
+        setGraphTitle(options, 'Shareholder Equity');
+        setYAxesLabel(options, 'In ' + SQ.units);
         this.setState({
             [GraphNames.SHAREHOLDER_EQUITY]: {
                 labels: SQ.quarterLabels,
                 datasets: [
-                    {
-                        label: 'Total Assets',
-                        data: SQ.totalAssets,
-                        fill: false,
-                        backgroundColor: Color.BLUE,
-                    },
-                    {
-                        label: 'Total Liabilities',
-                        data: SQ.totalLiabilities,
-                        fill: false,
-                        backgroundColor: Color.RED,
-                    },
-                    {
-                        label: 'Shareholder Equity',
-                        data: getShareholderEquity(SQ.totalAssets, SQ.totalLiabilities),
-                        fill: false,
-                        backgroundColor: Color.GREEN,
-                    },
+                    setBarDataValues('Total Assets', SQ.totalAssets, Color.BLUE),
+                    setBarDataValues('Total Liabilities', SQ.totalLiabilities, Color.RED),
+                    setBarDataValues('Shareholder Equity', getShareholderEquity(SQ.totalAssets, SQ.totalLiabilities), Color.BLACK),
                 ],
             },
-            [GraphNames.SHAREHOLDER_EQUITY_OPTIONS]: {
-                title: {
-                    text: "Shareholder Equity",
-                    display: true,
-                },
-                legend: {
-                    display: true,
-                },
-                scales: {
-                    xAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Quarter',
-                        }
-                    }],
-                    yAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'In ' + SQ.units,
-                        }
-                    }]
-                }
-            }
+            [GraphNames.SHAREHOLDER_EQUITY_OPTIONS]: options
         });
     }
 
