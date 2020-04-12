@@ -145,6 +145,126 @@ const totalCostOfGoods = [
     786380,
 ];
 
+const totalOperatingExpenses = [
+    187513,
+    219653,
+    233507,
+    252839,
+    276162,
+    318463,
+    362527,
+    383162,
+    418796,
+    466688,
+    467943,
+    509701,
+];
+
+const totalOperatingIncome = [
+    -14082,
+    -12224,
+    -14891,
+    -13009,
+    -20992,
+    -2647,
+    -9867,
+    -3108,
+    -22042,
+    -843,
+    32094,
+    17348,
+];
+
+const netIncome = [
+    -15090,
+    -15962,
+    -16098,
+    -15663,
+    -23986,
+    -5906,
+    19643,
+    -28204,
+    -38151,
+    -6740,
+    29397,
+    390940,
+];
+
+const cash = [
+    704494,
+    716989,
+    658412,
+    696474,
+    738586,
+    1387977,
+    721738,
+    583173,
+    521676,
+    617282,
+    612048,
+    1047118,
+];
+
+const currentDebt = [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    125971,
+    0,
+    0,
+    0,
+    0,
+    0,
+];
+
+const longTermDebt = [
+    345739,
+    349960,
+    354237,
+    358572,
+    362965,
+    1071437,
+    897976,
+    899695,
+    909302,
+    919026,
+    928869,
+    938832,
+];
+
+const cashFromOperations = [
+    43998,
+    46592,
+    39727,
+    -2606,
+    52053,
+    18979,
+    47628,
+    295080,
+    32444,
+    133392,
+    238747,
+    61116,
+];
+
+const cashFromInvesting = [
+    -170394,
+    -85350,
+    -104765,
+    19898,
+    -15493,
+    -150554,
+    -609178,
+    -905848,
+    -70387,
+    -25368,
+    -200923,
+    391871,
+];
+
 const getTotalRevenue = function() {
     let totalRevenue = [];
 
@@ -168,4 +288,12 @@ export const SQ = {
     bitcoinRevenue,
     hardwareRevenue,
     units,
+    totalOperatingExpenses,
+    totalOperatingIncome,
+    netIncome,
+    cash,
+    currentDebt,
+    longTermDebt,
+    cashFromOperations,
+    cashFromInvesting
 };

@@ -34,4 +34,8 @@ export const GraphNames = {
     REVENUE_PERCENTAGE_OPTIONS: 'revenue_percentage_options',
     REVENUE_YOY: 'revenue_yoy',
     REVENUE_YOY_OPTIONS: 'revenue_yoy_options',
+    REVENUE_OPERATIONS: 'revenue_income_expenses_operations',
+    REVENUE_OPERATIONS_OPTIONS: 'revenue_income_expenses_operations_options',
+    CASH: 'cash',
+    CASH_OPTIONS: 'cash_options',
 };

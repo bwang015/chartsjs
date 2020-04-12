@@ -1,4 +1,4 @@
-const getGrossProfit = function (revenue, costOfRevenue) {
+export const getGrossProfit = function (revenue, costOfRevenue) {
     let res = [];
     for (let i = 0; i < revenue.length; i++) {
         const percentage = ((revenue[i] - costOfRevenue[i]) * 100 / revenue[i]).toFixed(2);
@@ -8,7 +8,7 @@ const getGrossProfit = function (revenue, costOfRevenue) {
     return res;
 };
 
-const getRevenuePercentage = function (revenue, totalRevenue) {
+export const getRevenuePercentage = function (revenue, totalRevenue) {
     let res = [];
     for (let i = 0; i < revenue.length; i++) {
         const percentage = (revenue[i] * 100 / totalRevenue[i]).toFixed(2);
@@ -18,7 +18,7 @@ const getRevenuePercentage = function (revenue, totalRevenue) {
     return res;
 };
 
-const getRevenueYOY = function (revenue) {
+export const getRevenueYOY = function (revenue) {
     let res = [];
     for (let i = 0; i < revenue.length; i++) {
         if(i < 4 || revenue[i-4] == 0) { // So we don't divide by 0
@@ -32,8 +32,11 @@ const getRevenueYOY = function (revenue) {
     return res;
 };
 
-export {
-    getGrossProfit,
-    getRevenuePercentage,
-    getRevenueYOY,
-}
+export const getFreeCashFlow = function(cashFromOperations, cashFromInvesting) {
+    let res = [];
+    for (let i = 0; i < cashFromOperations.length; i++) {
+        res.push(cashFromOperations[i] + cashFromInvesting[i]);
+    }
+
+    return res;
+};

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import BarChart from '../../components/BarChart';
 import {SQ} from "../../square_financials";
-import {getGrossProfit, getRevenuePercentage, getRevenueYOY} from "../../utils/common_utils";
+import {getGrossProfit, getRevenuePercentage, getRevenueYOY, getFreeCashFlow} from "../../utils/common_utils";
 import {Color, GraphNames} from "../../utils/enums";
 import LineChart from "../../components/LineChart";
 
@@ -22,6 +22,8 @@ export default class SquareDashboard extends Component {
         this.getGrossProfitData();
         this.getRevenueBySegmentPercentageData();
         this.getRevenueYOYData();
+        this.getRevenueOperatingIncomeExpensesData();
+        this.getCashDebtCashFlow();
     }
 
     getRevenueSegmentsData() {
@@ -156,25 +158,25 @@ export default class SquareDashboard extends Component {
                 labels: SQ.quarterLabels,
                 datasets: [
                     {
-                        label: 'Transactional Revenue Profit Margin',
+                        label: 'Transactional Revenue',
                         data: getRevenuePercentage(SQ.transactionRevenue, this.totalRevenue),
                         fill: false,
                         backgroundColor: Color.BLUE,
                     },
                     {
-                        label: 'Service Revenue Profit Margin',
+                        label: 'Service Revenue',
                         data: getRevenuePercentage(SQ.serviceRevenue, this.totalRevenue),
                         fill: false,
                         backgroundColor: Color.RED,
                     },
                     {
-                        label: 'Hardware Revenue Profit Margin',
+                        label: 'Hardware Revenue',
                         data: getRevenuePercentage(SQ.hardwareRevenue, this.totalRevenue),
                         fill: false,
                         backgroundColor: Color.SILVER,
                     },
                     {
-                        label: 'Bitcoin Revenue Profit Margin',
+                        label: 'Bitcoin Revenue',
                         data: getRevenuePercentage(SQ.bitcoinRevenue, this.totalRevenue),
                         fill: false,
                         backgroundColor: Color.ORANGE,
@@ -270,6 +272,120 @@ export default class SquareDashboard extends Component {
         });
     }
 
+    getRevenueOperatingIncomeExpensesData() {
+        this.setState({
+            [GraphNames.REVENUE_OPERATIONS]: {
+                labels: SQ.quarterLabels,
+                datasets: [
+                    {
+                        label: 'Total Revenue',
+                        data: this.totalRevenue,
+                        fill: false,
+                        backgroundColor: Color.BLUE,
+                    },
+                    {
+                        label: 'Total Operating Expenses',
+                        data: SQ.totalOperatingExpenses,
+                        fill: false,
+                        backgroundColor: Color.RED,
+                    },
+                    {
+                        label: 'Total Operating Income',
+                        data: SQ.totalOperatingIncome,
+                        fill: false,
+                        backgroundColor: Color.BLACK,
+                    },
+                    {
+                        label: 'Net Income',
+                        data: SQ.netIncome,
+                        fill: false,
+                        backgroundColor: Color.ORANGE,
+                    },
+                ],
+            },
+            [GraphNames.REVENUE_OPERATIONS_OPTIONS]: {
+                title: {
+                    text: "Revenue, Operating Income and Expenses, and Net Income",
+                    display: true,
+                },
+                legend: {
+                    display: true,
+                },
+                scales: {
+                    xAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Quarter',
+                        }
+                    }],
+                    yAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Percentage (%)',
+                        }
+                    }]
+                }
+            }
+        });
+    }
+
+    getCashDebtCashFlow() {
+        this.setState({
+            [GraphNames.CASH]: {
+                labels: SQ.quarterLabels,
+                datasets: [
+                    {
+                        label: 'Cash and Cash Equivalents',
+                        data: SQ.cash,
+                        fill: false,
+                        backgroundColor: Color.BLUE,
+                    },
+                    {
+                        label: 'Current Debt',
+                        data: SQ.currentDebt,
+                        fill: false,
+                        backgroundColor: Color.RED,
+                    },
+                    {
+                        label: 'Long Term Debt',
+                        data: SQ.longTermDebt,
+                        fill: false,
+                        backgroundColor: Color.SILVER,
+                    },
+                    {
+                        label: 'Free Cash Flow',
+                        data: getFreeCashFlow(SQ.cashFromOperations, SQ.cashFromInvesting),
+                        fill: false,
+                        backgroundColor: Color.BLACK,
+                    },
+                ],
+            },
+            [GraphNames.CASH_OPTIONS]: {
+                title: {
+                    text: "Cash, Debt, and Free Cash Flow",
+                    display: true,
+                },
+                legend: {
+                    display: true,
+                },
+                scales: {
+                    xAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Quarter',
+                        }
+                    }],
+                    yAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'In ' + SQ.units,
+                        }
+                    }]
+                }
+            }
+        });
+    }
+
     render() {
         return (
             <div className="App">
@@ -277,6 +393,8 @@ export default class SquareDashboard extends Component {
                 <LineChart chartData={this.state[GraphNames.REVENUE_YOY]} options={this.state[GraphNames.REVENUE_YOY_OPTIONS]}/>
                 <LineChart chartData={this.state[GraphNames.GROSS_PROFIT_SEGMENTS]} options={this.state[GraphNames.GROSS_PROFIT_SEGMENTS_OPTIONS]}/>
                 <BarChart chartData={this.state[GraphNames.REVENUE_PERCENTAGE]} options={this.state[GraphNames.REVENUE_PERCENTAGE_OPTIONS]}/>
+                <BarChart chartData={this.state[GraphNames.REVENUE_OPERATIONS]} options={this.state[GraphNames.REVENUE_OPERATIONS_OPTIONS]}/>
+                <BarChart chartData={this.state[GraphNames.CASH]} options={this.state[GraphNames.CASH_OPTIONS]}/>
             </div>
         );
     }
