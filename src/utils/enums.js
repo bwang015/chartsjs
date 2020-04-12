@@ -23,6 +23,7 @@ export const Color = {
     BLACK: "#000000",
     ORANGE: "#FFA500",
     SILVER: "#C0C0C0",
+    GREEN: "#00FF00",
 };
 
 export const GraphNames = {
@@ -38,4 +39,8 @@ export const GraphNames = {
     REVENUE_OPERATIONS_OPTIONS: 'revenue_income_expenses_operations_options',
     CASH: 'cash',
     CASH_OPTIONS: 'cash_options',
+    FREE_CASH_FLOW: 'free_cash_flow',
+    FREE_CASH_FLOW_OPTIONS: 'free_cash_flow_options',
+    SHAREHOLDER_EQUITY: 'shareholder_equity',
+    SHAREHOLDER_EQUITY_OPTIONS: 'shareholder_equity_options',
 };

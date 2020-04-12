@@ -265,6 +265,36 @@ const cashFromInvesting = [
     391871,
 ];
 
+const totalAssets = [
+    1591113,
+    1741714,
+    2083852,
+    2187270,
+    2379612,
+    3554827,
+    3973368,
+    3281023,
+    4402591,
+    4654006,
+    4000504,
+    4551258,
+];
+
+const totalLiabilities = [
+    963180,
+    1037970,
+    1350943,
+    1400937,
+    1569632,
+    2473198,
+    2851224,
+    2160522,
+    3281002,
+    3469534,
+    2750710,
+    2836208,
+];
+
 const getTotalRevenue = function() {
     let totalRevenue = [];
 
@@ -295,5 +325,7 @@ export const SQ = {
     currentDebt,
     longTermDebt,
     cashFromOperations,
-    cashFromInvesting
+    cashFromInvesting,
+    totalAssets,
+    totalLiabilities,
 };

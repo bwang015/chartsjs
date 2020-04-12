@@ -40,3 +40,12 @@ export const getFreeCashFlow = function(cashFromOperations, cashFromInvesting) {
 
     return res;
 };
+
+export const getShareholderEquity = function(totalAssets, totalLiabilities) {
+    let res = [];
+    for (let i = 0; i < totalAssets.length; i++) {
+        res.push(totalAssets[i] - totalLiabilities[i]);
+    }
+
+    return res;
+};
