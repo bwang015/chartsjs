@@ -29,6 +29,7 @@ import {
 import { loadQuotesForStock } from "../../api/iex";
 import 'chartjs-plugin-annotation';
 import RevenueSegments from "../Widget/RevenueSegments";
+import RevenueMultiplierGraph from "../Widget/RevenueMultiplierGraph";
 
 class SquareDashboard extends Component {
     constructor(props) {
@@ -44,6 +45,15 @@ class SquareDashboard extends Component {
         const essentials = {
             labels: SQ.quarterLabels,
             units: SQ.units,
+            symbol: SQ.symbol,
+            stockName: "Square",
+        };
+
+        const estimates = SQ.estimates;
+
+        const stockInfo = {
+            peakStockPrice: SQ.peakStockPrice,
+            currentStockPrice: SQ.currentStockPrice,
         };
 
         this.state = {
@@ -52,6 +62,8 @@ class SquareDashboard extends Component {
             symbol: SQ.symbol,
             revenue: revenue,
             essentials: essentials,
+            estimates: estimates,
+            stockInfo: stockInfo,
             totalRevenue: SQ.getTotalRevenue(),
         };
     }
@@ -68,39 +80,39 @@ class SquareDashboard extends Component {
     //     this.getStockInformation();
     // }
 
-    getStockInformation() {
-        loadQuotesForStock(SQ.symbol).then(res => {
-            const price = _.get(res, Stock.LATEST_PRICE);
-            const yearHigh = _.get(res, Stock.YEAR_HIGH);
-            const yearLow = _.get(res, Stock.YEAR_LOW);
-            const marketCap = _.get(res, Stock.MARKET_CAP);
-            const priceToSales = getPriceToSales(this.state.totalRevenue, SQ.units, marketCap);
-            const peakPriceToSales = getPeakPriceToSales(SQ.peakStockPrice, price, marketCap, this.state.totalRevenue, SQ.units);
-            const futureTTMRevenue = getFutureTTMRevenue(this.state.totalRevenue, SQ.units, SQ.estimates);
-            const futureSharePrice = getFutureSharePrice(marketCap, price, peakPriceToSales, futureTTMRevenue);
-
-            this.setState(prevState => {
-                let options = _.cloneDeep(prevState.options);
-                setGraphTitle(options, 'Current Stock Price');
-                setAxesLabel(options, '% of Revenue Multiplier Discount', 'Square Stock');
-                setHighLowAnnotation(yearHigh, yearLow, options);
-                setPeakAnnotation(futureSharePrice, options);
-                setOwnedStockPriceAnnotation(SQ.currentStockPrice, options);
-
-                return {
-                    [GraphNames.STOCK]: {
-                        labels: [`Current vs Peak Revenue Multiplier: [${priceToSales}x, ${peakPriceToSales}x]`],
-                        datasets: [
-                            setBarDataValues('Stock Price', [price], Color.BLUE),
-                        ],
-                    },
-                    [GraphNames.STOCK_OPTIONS]: options,
-                }
-            });
-        }).catch(error => {
-            console.log(error);
-        });
-    }
+    // getStockInformation() {
+    //     loadQuotesForStock(SQ.symbol).then(res => {
+    //         const price = _.get(res, Stock.LATEST_PRICE);
+    //         const yearHigh = _.get(res, Stock.YEAR_HIGH);
+    //         const yearLow = _.get(res, Stock.YEAR_LOW);
+    //         const marketCap = _.get(res, Stock.MARKET_CAP);
+    //         const priceToSales = getPriceToSales(this.state.totalRevenue, SQ.units, marketCap);
+    //         const peakPriceToSales = getPeakPriceToSales(SQ.peakStockPrice, price, marketCap, this.state.totalRevenue, SQ.units);
+    //         const futureTTMRevenue = getFutureTTMRevenue(this.state.totalRevenue, SQ.units, SQ.estimates);
+    //         const futureSharePrice = getFutureSharePrice(marketCap, price, peakPriceToSales, futureTTMRevenue);
+    //
+    //         this.setState(prevState => {
+    //             let options = _.cloneDeep(prevState.options);
+    //             setGraphTitle(options, 'Current Stock Price');
+    //             setAxesLabel(options, '% of Revenue Multiplier Discount', 'Square Stock');
+    //             setHighLowAnnotation(yearHigh, yearLow, options);
+    //             setPeakAnnotation(futureSharePrice, options);
+    //             setOwnedStockPriceAnnotation(SQ.currentStockPrice, options);
+    //
+    //             return {
+    //                 [GraphNames.STOCK]: {
+    //                     labels: [`Current vs Peak Revenue Multiplier: [${priceToSales}x, ${peakPriceToSales}x]`],
+    //                     datasets: [
+    //                         setBarDataValues('Stock Price', [price], Color.BLUE),
+    //                     ],
+    //                 },
+    //                 [GraphNames.STOCK_OPTIONS]: options,
+    //             }
+    //         });
+    //     }).catch(error => {
+    //         console.log(error);
+    //     });
+    // }
 
     getGrossProfitData() {
         this.setState(prevState => {
@@ -239,6 +251,7 @@ class SquareDashboard extends Component {
         return (
             <div className="App">
                 <RevenueSegments revenue={this.state.revenue} totalRevenue={this.state.totalRevenue} essentials={this.state.essentials}/>
+                <RevenueMultiplierGraph totalRevenue={this.state.totalRevenue} essentials={this.state.essentials} estimates={this.state.estimates} stockInfo={this.state.stockInfo}/>
                 {/*<BarChart chartData={this.state[GraphNames.STOCK]} options={this.state[GraphNames.STOCK_OPTIONS]}/>*/}
                 {/*<LineChart chartData={this.state[GraphNames.REVENUE_YOY]} options={this.state[GraphNames.REVENUE_YOY_OPTIONS]}/>*/}
                 {/*<LineChart chartData={this.state[GraphNames.GROSS_PROFIT_SEGMENTS]} options={this.state[GraphNames.GROSS_PROFIT_SEGMENTS_OPTIONS]}/>*/}
