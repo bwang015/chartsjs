@@ -1,5 +1,16 @@
-import { Q } from "./utils/enums";
-const units = "Thousands";
+import {Q, Units} from "./utils/enums";
+const units = Units.THOUSANDS;
+
+const peakStockPrice = 85.70;
+
+const estimates = {
+    low: 1.3,
+    high: 1.34,
+    lowPercent: 0,
+    highPercent: 0,
+    units: Units.BILLIONS,
+};
+
 const transactionRevenue = [
     403478,
     482065,
@@ -309,6 +320,8 @@ const symbol = "SQ";
 
 export const SQ = {
     getTotalRevenue,
+    peakStockPrice,
+    estimates,
     totalCostOfGoods,
     bitcoinCostOfGoods,
     hardwareCostOfGoods,

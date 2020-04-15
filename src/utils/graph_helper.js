@@ -1,5 +1,5 @@
 import _ from "lodash"
-import { GraphNames, GraphType} from "./enums";
+import { GraphNames, GraphType, Color} from "./enums";
 
 export const setGraphTitle = function (options, title) {
     _.set(options, GraphNames.TITLE, title);
@@ -21,10 +21,26 @@ export const setAxesLabel = function (options, yAxesLabel, xAxesLabel='Quarter')
 export const setHighLowAnnotation = function (high, low, options, annotation) {
     let lowAnnotation = _.cloneDeep(annotation);
     let highAnnotation = _.cloneDeep(annotation);
-    _.set(lowAnnotation, 'label.content', '52 Week Low');
+    _.set(lowAnnotation, 'label.content', `52 Week Low: ${low}`);
     _.set(lowAnnotation, 'value', low);
     _.set(highAnnotation, 'value', high);
+    _.set(highAnnotation, 'label.content', `52 Week High: ${high}`);
     let annotationArray = [lowAnnotation, highAnnotation];
+    _.set(options, GraphNames.ANNOTATIONS, annotationArray);
+};
+
+export const setPeakAnnotation = function (futureSharePrice, options, annotation) {
+    let annotationArray = _.cloneDeep(_.get(options, GraphNames.ANNOTATIONS));
+
+    // eslint-disable-next-line array-callback-return
+    futureSharePrice.map(entry => {
+        let annotationCopy = _.cloneDeep(annotation);
+        _.set(annotationCopy, 'value', entry);
+        _.set(annotationCopy, 'borderColor', Color.RED);
+        _.set(annotationCopy, 'label.content', entry);
+        _.set(annotationCopy, 'label.position', 'right');
+        annotationArray.push(annotationCopy);
+    });
     _.set(options, GraphNames.ANNOTATIONS, annotationArray);
 };
 

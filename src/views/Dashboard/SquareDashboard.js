@@ -8,7 +8,11 @@ import {
     getRevenuePercentage,
     getRevenueYOY,
     getFreeCashFlow,
-    getShareholderEquity
+    getShareholderEquity,
+    getPriceToSales,
+    getPeakPriceToSales,
+    getFutureTTMRevenue,
+    getFutureSharePrice,
 } from "../../utils/common_utils";
 import { Color, GraphNames, Stock } from "../../utils/enums";
 import {Annotation, Options} from "../../utils/common_objects";
@@ -18,7 +22,8 @@ import {
     stackGraphs,
     setBarDataValues,
     setLineDataValues,
-    setHighLowAnnotation
+    setHighLowAnnotation,
+    setPeakAnnotation
 } from "../../utils/graph_helper";
 import { loadQuotesForStock } from "../../api/iex";
 import 'chartjs-plugin-annotation';
@@ -53,21 +58,24 @@ class SquareDashboard extends Component {
             const price = _.get(res, Stock.LATEST_PRICE);
             const yearHigh = _.get(res, Stock.YEAR_HIGH);
             const yearLow = _.get(res, Stock.YEAR_LOW);
-            // const marketCap = _.get(res, Stock.MARKET_CAP);
+            const marketCap = _.get(res, Stock.MARKET_CAP);
+            const priceToSales = getPriceToSales(this.state.totalRevenue, SQ.units, marketCap);
+            const peakPriceToSales = getPeakPriceToSales(SQ.peakStockPrice, price, marketCap, this.state.totalRevenue, SQ.units);
+            const futureTTMRevenue = getFutureTTMRevenue(this.state.totalRevenue, SQ.units, SQ.estimates);
+            const futureSharePrice = getFutureSharePrice(marketCap, price, peakPriceToSales, futureTTMRevenue);
 
             this.setState(prevState => {
                 let options = _.cloneDeep(prevState.options);
                 setGraphTitle(options, 'Current Stock Price');
-                setAxesLabel(options, '$', '');
-                setHighLowAnnotation(yearHigh, yearLow, options, prevState.annotations);
+                setAxesLabel(options, '$', 'Square Stock');
+                setHighLowAnnotation(yearHigh, yearLow, options, Annotation);
+                setPeakAnnotation(futureSharePrice, options, Annotation);
 
-                console.log(options);
                 return {
                     [GraphNames.STOCK]: {
-                        labels: ['Square Stock'],
+                        labels: [`Current vs Peak Revenue Multiplier: [${priceToSales}x, ${peakPriceToSales}x]`],
                         datasets: [
                             setBarDataValues('Stock Price', [price], Color.BLUE),
-                            // setLineDataValues('52 Week High', [yearHigh], Color.GREEN),
                         ],
                     },
                     [GraphNames.STOCK_OPTIONS]: options,

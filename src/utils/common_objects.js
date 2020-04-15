@@ -30,9 +30,8 @@ export const Annotation = {
     scaleID: 'y-axis-0',
     value: 0,
     borderColor: 'rgb(75, 192, 192)',
-    // borderWidth: 5,
+    borderWidth: 2,
     label: {
         enabled: true,
-        content: "52 Week High"
     }
 };

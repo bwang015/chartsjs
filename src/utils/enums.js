@@ -64,3 +64,13 @@ export const GraphType = {
     LINE: 'line',
     BAR: 'bar',
 };
+
+export const Units = {
+    THOUSANDS: 'Thousands',
+    BILLIONS: 'Billions'
+};
+
+export const NUMERICAL_UNITS = {
+    [Units.THOUSANDS]: 1000,
+    [Units.BILLIONS]: 1000000000,
+};
