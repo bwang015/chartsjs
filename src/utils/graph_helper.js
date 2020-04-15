@@ -6,11 +6,26 @@ export const setGraphTitle = function (options, title) {
     return options;
 };
 
-export const setYAxesLabel = function (options, yAxesLabel) {
+export const setAxesLabel = function (options, yAxesLabel, xAxesLabel='Quarter') {
     let arr = _.get(options, GraphNames.Y_AXES);
     _.set(arr[0], GraphNames.LABEL, yAxesLabel);
     _.set(options, GraphNames.Y_AXES, [arr[0]]);
+
+    arr = _.get(options, GraphNames.X_AXES);
+    _.set(arr[0], GraphNames.LABEL, xAxesLabel);
+    _.set(options, GraphNames.X_AXES, [arr[0]]);
+
     return options;
+};
+
+export const setHighLowAnnotation = function (high, low, options, annotation) {
+    let lowAnnotation = _.cloneDeep(annotation);
+    let highAnnotation = _.cloneDeep(annotation);
+    _.set(lowAnnotation, 'label.content', '52 Week Low');
+    _.set(lowAnnotation, 'value', low);
+    _.set(highAnnotation, 'value', high);
+    let annotationArray = [lowAnnotation, highAnnotation];
+    _.set(options, GraphNames.ANNOTATIONS, annotationArray);
 };
 
 export const stackGraphs = function (options) {

@@ -10,9 +10,18 @@ import {
     getFreeCashFlow,
     getShareholderEquity
 } from "../../utils/common_utils";
-import { Color, GraphNames } from "../../utils/enums";
-import { Options } from "../../utils/common_objects";
-import {setGraphTitle, setYAxesLabel, stackGraphs, setBarDataValues, setLineDataValues} from "../../utils/graph_helper";
+import { Color, GraphNames, Stock } from "../../utils/enums";
+import {Annotation, Options} from "../../utils/common_objects";
+import {
+    setGraphTitle,
+    setAxesLabel,
+    stackGraphs,
+    setBarDataValues,
+    setLineDataValues,
+    setHighLowAnnotation
+} from "../../utils/graph_helper";
+import { loadQuotesForStock } from "../../api/iex";
+import 'chartjs-plugin-annotation';
 
 class SquareDashboard extends Component {
     constructor(props) {
@@ -20,6 +29,7 @@ class SquareDashboard extends Component {
 
         this.state = {
             options: Options,
+            annotations: Annotation,
             symbol: SQ.symbol,
             totalRevenue: SQ.getTotalRevenue(),
         };
@@ -35,6 +45,37 @@ class SquareDashboard extends Component {
         this.getCashAndDebt();
         this.getFreeCashFlow();
         this.getShareholderEquityData();
+        this.getStockInformation();
+    }
+
+    getStockInformation() {
+        loadQuotesForStock(SQ.symbol).then(res => {
+            const price = _.get(res, Stock.LATEST_PRICE);
+            const yearHigh = _.get(res, Stock.YEAR_HIGH);
+            const yearLow = _.get(res, Stock.YEAR_LOW);
+            // const marketCap = _.get(res, Stock.MARKET_CAP);
+
+            this.setState(prevState => {
+                let options = _.cloneDeep(prevState.options);
+                setGraphTitle(options, 'Current Stock Price');
+                setAxesLabel(options, '$', '');
+                setHighLowAnnotation(yearHigh, yearLow, options, prevState.annotations);
+
+                console.log(options);
+                return {
+                    [GraphNames.STOCK]: {
+                        labels: ['Square Stock'],
+                        datasets: [
+                            setBarDataValues('Stock Price', [price], Color.BLUE),
+                            // setLineDataValues('52 Week High', [yearHigh], Color.GREEN),
+                        ],
+                    },
+                    [GraphNames.STOCK_OPTIONS]: options,
+                }
+            });
+        }).catch(error => {
+            console.log(error);
+        });
     }
 
     getRevenueSegmentsData() {
@@ -52,7 +93,7 @@ class SquareDashboard extends Component {
         this.setState( prevState => {
             let options = _.cloneDeep(prevState.options);
             setGraphTitle(options, 'Revenue By Segments');
-            setYAxesLabel(options, `In ${SQ.units}`);
+            setAxesLabel(options, `In ${SQ.units}`);
             stackGraphs(options);
             return {
                 [GraphNames.REVENUE_SEGMENTS]: data,
@@ -65,7 +106,7 @@ class SquareDashboard extends Component {
         this.setState(prevState => {
             let options = _.cloneDeep(prevState.options);
             setGraphTitle(options, 'Gross Revenue Margins by Segments');
-            setYAxesLabel(options, `Percentage (%)`);
+            setAxesLabel(options, `Percentage (%)`);
             return {
                 [GraphNames.GROSS_PROFIT_SEGMENTS]: {
                     labels: SQ.quarterLabels,
@@ -86,7 +127,7 @@ class SquareDashboard extends Component {
         this.setState(prevState => {
             let options = _.cloneDeep(prevState.options);
             setGraphTitle(options, 'Gross Revenue Margins by Segments');
-            setYAxesLabel(options, 'Percentage (%)');
+            setAxesLabel(options, 'Percentage (%)');
             return {
                 [GraphNames.REVENUE_PERCENTAGE]: {
                     labels: SQ.quarterLabels,
@@ -106,7 +147,7 @@ class SquareDashboard extends Component {
         this.setState(prevState => {
             let options = _.cloneDeep(prevState.options);
             setGraphTitle(options, 'Revenue Y/Y By Segments');
-            setYAxesLabel(options, 'Percentage (%)');
+            setAxesLabel(options, 'Percentage (%)');
             return {
                 [GraphNames.REVENUE_YOY]: {
                     labels: SQ.quarterLabels,
@@ -126,7 +167,7 @@ class SquareDashboard extends Component {
     getRevenueOperatingIncomeExpensesData() {
         let options = _.cloneDeep(Options);
         setGraphTitle(options, 'Revenue, Operating Income and Expenses, and Net Income');
-        setYAxesLabel(options, 'In ' + SQ.units);
+        setAxesLabel(options, 'In ' + SQ.units);
         this.setState({
             [GraphNames.REVENUE_OPERATIONS]: {
                 labels: SQ.quarterLabels,
@@ -144,7 +185,7 @@ class SquareDashboard extends Component {
     getCashAndDebt() {
         let options = _.cloneDeep(Options);
         setGraphTitle(options, 'Cash and Debt');
-        setYAxesLabel(options, 'In ' + SQ.units);
+        setAxesLabel(options, 'In ' + SQ.units);
         this.setState({
             [GraphNames.CASH]: {
                 labels: SQ.quarterLabels,
@@ -161,7 +202,7 @@ class SquareDashboard extends Component {
     getFreeCashFlow() {
         let options = _.cloneDeep(Options);
         setGraphTitle(options, 'Free Cash Flow');
-        setYAxesLabel(options, 'In ' + SQ.units);
+        setAxesLabel(options, 'In ' + SQ.units);
         this.setState({
             [GraphNames.FREE_CASH_FLOW]: {
                 labels: SQ.quarterLabels,
@@ -178,7 +219,7 @@ class SquareDashboard extends Component {
     getShareholderEquityData() {
         let options = _.cloneDeep(Options);
         setGraphTitle(options, 'Shareholder Equity');
-        setYAxesLabel(options, 'In ' + SQ.units);
+        setAxesLabel(options, 'In ' + SQ.units);
         this.setState({
             [GraphNames.SHAREHOLDER_EQUITY]: {
                 labels: SQ.quarterLabels,
@@ -193,9 +234,11 @@ class SquareDashboard extends Component {
     }
 
 
+
     render() {
         return (
             <div className="App">
+                <BarChart chartData={this.state[GraphNames.STOCK]} options={this.state[GraphNames.STOCK_OPTIONS]}/>
                 <BarChart chartData={this.state[GraphNames.REVENUE_SEGMENTS]} options={this.state[GraphNames.REVENUE_SEGMENTS_OPTIONS]}/>
                 <LineChart chartData={this.state[GraphNames.REVENUE_YOY]} options={this.state[GraphNames.REVENUE_YOY_OPTIONS]}/>
                 <LineChart chartData={this.state[GraphNames.GROSS_PROFIT_SEGMENTS]} options={this.state[GraphNames.GROSS_PROFIT_SEGMENTS_OPTIONS]}/>

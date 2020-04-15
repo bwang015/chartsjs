@@ -43,11 +43,21 @@ export const GraphNames = {
     FREE_CASH_FLOW_OPTIONS: 'free_cash_flow_options',
     SHAREHOLDER_EQUITY: 'shareholder_equity',
     SHAREHOLDER_EQUITY_OPTIONS: 'shareholder_equity_options',
+    STOCK: 'stock',
+    STOCK_OPTIONS: 'stock_options',
     TITLE: 'title.text',
     Y_AXES: 'scales.yAxes',
     X_AXES: 'scales.xAxes',
     LABEL: 'scaleLabel.labelString',
     STACK_GRAPH: 'stacked',
+    ANNOTATIONS: 'annotation.annotations',
+};
+
+export const Stock = {
+    LATEST_PRICE: 'latestPrice',
+    YEAR_HIGH: 'week52High',
+    YEAR_LOW: 'week52Low',
+    MARKET_CAP: 'marketCap',
 };
 
 export const GraphType = {

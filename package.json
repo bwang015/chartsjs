@@ -6,6 +6,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "chart.js": "^2.9.3",
+    "chartjs-plugin-annotation": "^0.5.7",
     "lodash": "^4.17.15",
     "react": "^16.8.4",
     "react-chartjs-2": "^2.9.0",
