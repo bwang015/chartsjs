@@ -1,6 +1,7 @@
 export const Options = {
     title: {
         display: true,
+        fontSize: 24,
     },
     legend: {
         display: true,
