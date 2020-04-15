@@ -50,10 +50,12 @@ export const GraphType = {
 
 export const Units = {
     THOUSANDS: 'Thousands',
+    MILLIONS: 'Millions',
     BILLIONS: 'Billions'
 };
 
 export const NUMERICAL_UNITS = {
     [Units.THOUSANDS]: 1000,
+    [Units.MILLIONS]: 1000000,
     [Units.BILLIONS]: 1000000000,
 };

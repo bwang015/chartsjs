@@ -1,4 +1,4 @@
-import {Q, Units} from "./utils/enums";
+import {Q, Units} from "../utils/enums";
 const units = Units.THOUSANDS;
 
 const peakStockPrice = 85.70;

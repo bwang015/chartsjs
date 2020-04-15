@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {SQ} from "../../square_financials";
+import {SQ} from "../../data/square_financials";
 import {Color} from "../../utils/enums";
 import RevenueSegments from "../Widget/RevenueSegments";
 import RevenueMultiplierGraph from "../Widget/RevenueMultiplierGraph";

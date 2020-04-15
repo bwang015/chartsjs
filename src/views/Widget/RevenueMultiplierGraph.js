@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import BarChart from "../../components/BarChart";
-import {Color, GraphNames, Stock} from "../../utils/enums";
+import {Color, Stock} from "../../utils/enums";
 import {
     setAxesLabel,
     setBarDataValues,
@@ -65,7 +65,7 @@ class RevenueMultiplierGraph extends Component {
                 chartData: {
                     labels: [`Current vs Peak Revenue Multiplier: [${priceToSales}x, ${peakPriceToSales}x]`],
                     datasets: [
-                        setBarDataValues('Stock Price', [price], Color.BLUE),
+                        setBarDataValues('Stock Price', [price], Color.BLACK),
                     ],
                 },
                 options: options,

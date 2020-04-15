@@ -61,9 +61,11 @@ export const getUnitConverter = function(units) {
         return NUMERICAL_UNITS[Units.THOUSANDS];
     } else if (units === Units.BILLIONS) {
         return NUMERICAL_UNITS[Units.BILLIONS];
+    } else if (units === Units.MILLIONS) {
+        return NUMERICAL_UNITS[Units.MILLIONS];
     }
 
-    return 0;
+    throw Error('Invalid Units');
 };
 
 export const getPriceToSales = function(totalRevenue, units, marketCap) {
@@ -76,7 +78,6 @@ export const getPeakPriceToSales = function(peakStockPrice, currentStockPrice, c
     const peakMarketCap = peakStockPrice * outstandingShares;
 
     let pastTTMRevenue = getTTMRevenue(totalRevenue, 4) * getUnitConverter(units);
-    // pastTTMRevenue += getNextQuarterRevenueEstimate(estimates);
     return (peakMarketCap / pastTTMRevenue).toFixed(2);
 };
 
