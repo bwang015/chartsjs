@@ -23,7 +23,8 @@ import {
     setBarDataValues,
     setLineDataValues,
     setHighLowAnnotation,
-    setPeakAnnotation
+    setPeakAnnotation,
+    setOwnedStockPriceAnnotation
 } from "../../utils/graph_helper";
 import { loadQuotesForStock } from "../../api/iex";
 import 'chartjs-plugin-annotation';
@@ -67,9 +68,10 @@ class SquareDashboard extends Component {
             this.setState(prevState => {
                 let options = _.cloneDeep(prevState.options);
                 setGraphTitle(options, 'Current Stock Price');
-                setAxesLabel(options, '$', 'Square Stock');
-                setHighLowAnnotation(yearHigh, yearLow, options, Annotation);
-                setPeakAnnotation(futureSharePrice, options, Annotation);
+                setAxesLabel(options, '% of Revenue Multiplier Discount', 'Square Stock');
+                setHighLowAnnotation(yearHigh, yearLow, options);
+                setPeakAnnotation(futureSharePrice, options);
+                setOwnedStockPriceAnnotation(SQ.currentStockPrice, options);
 
                 return {
                     [GraphNames.STOCK]: {

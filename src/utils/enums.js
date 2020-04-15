@@ -24,6 +24,7 @@ export const Color = {
     ORANGE: "#FFA500",
     SILVER: "#C0C0C0",
     GREEN: "#00FF00",
+    YELLOW: "#FFFF00",
 };
 
 export const GraphNames = {

@@ -2,6 +2,7 @@ import {Q, Units} from "./utils/enums";
 const units = Units.THOUSANDS;
 
 const peakStockPrice = 85.70;
+const currentStockPrice = 46.501;
 
 const estimates = {
     low: 1.3,
@@ -344,4 +345,5 @@ export const SQ = {
     totalAssets,
     totalLiabilities,
     symbol,
+    currentStockPrice,
 };
