@@ -36,7 +36,10 @@ class RevenueSegments extends Component {
         let dataArray = [];
         const keys = Object.keys(this.state.revenue);
 
-        keys.forEach(key => dataArray.push(setBarDataValues(key, this.state.revenue[key], Color.BLUE)));
+        keys.forEach(key => {
+            const obj = this.state.revenue[key];
+            dataArray.push(setBarDataValues(key, obj.data, obj.color))
+        });
         dataArray.push(setLineDataValues('Total Revenue', this.state.totalRevenue, Color.BLACK));
         const data = {
             labels: this.state.essentials.labels,

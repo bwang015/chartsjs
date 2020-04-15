@@ -9,7 +9,7 @@ import {
 import _ from "lodash";
 import {Options} from "../../utils/common_objects";
 import {
-    getRevenueYOY
+    getRevenueYOY,
 } from "../../utils/common_utils";
 
 class RevenueGrowthYOY extends Component {
@@ -51,7 +51,10 @@ class RevenueGrowthYOY extends Component {
         let dataArray = [];
         const keys = Object.keys(this.state.revenueYOY);
 
-        keys.forEach(key => dataArray.push(setLineDataValues(key, getRevenueYOY(this.state.revenueYOY[key]), Color.BLUE)));
+        keys.forEach(key => {
+            const obj = this.state.revenueYOY[key];
+            return dataArray.push(setLineDataValues(key, getRevenueYOY(obj.data), obj.color));
+        });
         dataArray.push(setLineDataValues('Total Revenue Y/Y Growth', getRevenueYOY(this.state.totalRevenue), Color.BLACK));
 
         const data = {
