@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import BarChart from '../../components/BarChart';
-import LineChart from "../../components/LineChart";
 import { SQ } from "../../square_financials";
 import _ from "lodash";
 import {
@@ -9,27 +7,18 @@ import {
     getRevenueYOY,
     getFreeCashFlow,
     getShareholderEquity,
-    getPriceToSales,
-    getPeakPriceToSales,
-    getFutureTTMRevenue,
-    getFutureSharePrice,
 } from "../../utils/common_utils";
 import { Color, GraphNames, Stock } from "../../utils/enums";
 import {Annotation, Options} from "../../utils/common_objects";
 import {
     setGraphTitle,
     setAxesLabel,
-    stackGraphs,
     setBarDataValues,
     setLineDataValues,
-    setHighLowAnnotation,
-    setPeakAnnotation,
-    setOwnedStockPriceAnnotation
 } from "../../utils/graph_helper";
-import { loadQuotesForStock } from "../../api/iex";
-import 'chartjs-plugin-annotation';
 import RevenueSegments from "../Widget/RevenueSegments";
 import RevenueMultiplierGraph from "../Widget/RevenueMultiplierGraph";
+import RevenueGrowthYOY from "../Widget/RevenueGrowthYOY";
 
 class SquareDashboard extends Component {
     constructor(props) {
@@ -40,6 +29,13 @@ class SquareDashboard extends Component {
             'Service Revenue': SQ.serviceRevenue,
             'Hardware Revenue': SQ.hardwareRevenue,
             'Bitcoin Revenue': SQ.bitcoinRevenue,
+        };
+
+        const revenueYOY = {
+            'Transactional Revenue Y/Y Growth': SQ.transactionRevenue,
+            'Service Revenue Y/Y Growth': SQ.serviceRevenue,
+            'Hardware Revenue Y/Y Growth': SQ.hardwareRevenue,
+            'Bitcoin Revenue Y/Y Growth': SQ.bitcoinRevenue,
         };
 
         const essentials = {
@@ -64,55 +60,10 @@ class SquareDashboard extends Component {
             essentials: essentials,
             estimates: estimates,
             stockInfo: stockInfo,
+            revenueYOY: revenueYOY,
             totalRevenue: SQ.getTotalRevenue(),
         };
     }
-
-    // componentDidMount() {
-    //     this.getRevenueYOYData();
-    //     this.getGrossProfitData();
-    //     this.getRevenueBySegmentPercentageData();
-    //     this.getRevenueYOYData();
-    //     this.getRevenueOperatingIncomeExpensesData();
-    //     this.getCashAndDebt();
-    //     this.getFreeCashFlow();
-    //     this.getShareholderEquityData();
-    //     this.getStockInformation();
-    // }
-
-    // getStockInformation() {
-    //     loadQuotesForStock(SQ.symbol).then(res => {
-    //         const price = _.get(res, Stock.LATEST_PRICE);
-    //         const yearHigh = _.get(res, Stock.YEAR_HIGH);
-    //         const yearLow = _.get(res, Stock.YEAR_LOW);
-    //         const marketCap = _.get(res, Stock.MARKET_CAP);
-    //         const priceToSales = getPriceToSales(this.state.totalRevenue, SQ.units, marketCap);
-    //         const peakPriceToSales = getPeakPriceToSales(SQ.peakStockPrice, price, marketCap, this.state.totalRevenue, SQ.units);
-    //         const futureTTMRevenue = getFutureTTMRevenue(this.state.totalRevenue, SQ.units, SQ.estimates);
-    //         const futureSharePrice = getFutureSharePrice(marketCap, price, peakPriceToSales, futureTTMRevenue);
-    //
-    //         this.setState(prevState => {
-    //             let options = _.cloneDeep(prevState.options);
-    //             setGraphTitle(options, 'Current Stock Price');
-    //             setAxesLabel(options, '% of Revenue Multiplier Discount', 'Square Stock');
-    //             setHighLowAnnotation(yearHigh, yearLow, options);
-    //             setPeakAnnotation(futureSharePrice, options);
-    //             setOwnedStockPriceAnnotation(SQ.currentStockPrice, options);
-    //
-    //             return {
-    //                 [GraphNames.STOCK]: {
-    //                     labels: [`Current vs Peak Revenue Multiplier: [${priceToSales}x, ${peakPriceToSales}x]`],
-    //                     datasets: [
-    //                         setBarDataValues('Stock Price', [price], Color.BLUE),
-    //                     ],
-    //                 },
-    //                 [GraphNames.STOCK_OPTIONS]: options,
-    //             }
-    //         });
-    //     }).catch(error => {
-    //         console.log(error);
-    //     });
-    // }
 
     getGrossProfitData() {
         this.setState(prevState => {
@@ -250,10 +201,9 @@ class SquareDashboard extends Component {
     render() {
         return (
             <div className="App">
-                <RevenueSegments revenue={this.state.revenue} totalRevenue={this.state.totalRevenue} essentials={this.state.essentials}/>
                 <RevenueMultiplierGraph totalRevenue={this.state.totalRevenue} essentials={this.state.essentials} estimates={this.state.estimates} stockInfo={this.state.stockInfo}/>
-                {/*<BarChart chartData={this.state[GraphNames.STOCK]} options={this.state[GraphNames.STOCK_OPTIONS]}/>*/}
-                {/*<LineChart chartData={this.state[GraphNames.REVENUE_YOY]} options={this.state[GraphNames.REVENUE_YOY_OPTIONS]}/>*/}
+                <RevenueSegments revenue={this.state.revenue} totalRevenue={this.state.totalRevenue} essentials={this.state.essentials}/>
+                <RevenueGrowthYOY essentials={this.state.essentials} revenueYOY={this.state.revenueYOY} totalRevenue={this.state.totalRevenue}/>
                 {/*<LineChart chartData={this.state[GraphNames.GROSS_PROFIT_SEGMENTS]} options={this.state[GraphNames.GROSS_PROFIT_SEGMENTS_OPTIONS]}/>*/}
                 {/*<BarChart chartData={this.state[GraphNames.REVENUE_PERCENTAGE]} options={this.state[GraphNames.REVENUE_PERCENTAGE_OPTIONS]}/>*/}
                 {/*<BarChart chartData={this.state[GraphNames.REVENUE_OPERATIONS]} options={this.state[GraphNames.REVENUE_OPERATIONS_OPTIONS]}/>*/}
