@@ -76,7 +76,6 @@ export const getPeakPriceToSales = function(peakStockPrice, currentStockPrice, c
     const peakMarketCap = peakStockPrice * outstandingShares;
 
     let pastTTMRevenue = getTTMRevenue(totalRevenue, 4) * getUnitConverter(units);
-    // pastTTMRevenue += getNextQuarterRevenueEstimate(estimates);
     return (peakMarketCap / pastTTMRevenue).toFixed(2);
 };
 
@@ -104,4 +103,20 @@ export const getFutureSharePrice = function(currMarketCap, currStockPrice, peakP
         sharePrice.push(((entry * peakPriceToSales * futureTTMRevenue * currStockPrice) / currMarketCap).toFixed(2));
     });
     return sharePrice
+};
+
+export const annualizeNumbers = function(arrNumbers) {
+    console.log(arrNumbers);
+    let sum = 0;
+    for(let i = 0; i < 3; i++) {
+        sum += arrNumbers[i];
+    }
+
+    let res = [];
+    for(let i = 4; i < arrNumbers.length; i++) {
+        sum += arrNumbers[i];
+        res.push(sum);
+        sum -= arrNumbers[i-4];
+    }
+    return res;
 };

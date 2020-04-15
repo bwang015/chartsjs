@@ -13,6 +13,7 @@ import {
     getPeakPriceToSales,
     getFutureTTMRevenue,
     getFutureSharePrice,
+    annualizeNumbers,
 } from "../../utils/common_utils";
 import { Color, GraphNames, Stock } from "../../utils/enums";
 import {Annotation, Options} from "../../utils/common_objects";
@@ -39,12 +40,13 @@ class SquareDashboard extends Component {
             options: Options,
             annotations: Annotation,
             symbol: SQ.symbol,
+            toggleOn: false,
             totalRevenue: SQ.getTotalRevenue(),
         };
     }
 
     componentDidMount() {
-        this.getRevenueSegmentsData();
+        this.getRevenueSegmentsData(false);
         this.getRevenueYOYData();
         this.getGrossProfitData();
         this.getRevenueBySegmentPercentageData();
@@ -56,21 +58,12 @@ class SquareDashboard extends Component {
         this.getStockInformation();
     }
 
-    handleButtonClick = e => {
-        alert("Hello World!");
-        // const { value } = e.target;
-        // const isAnnual = value === "annual";
-        //
-        // const newData = isAnnual ? managerData : managerQuarterData;
-        // const newLabels = isAnnual ? yearLabels : quarterLabels;
-        // const newAverage = isAnnual ? nationalAverageData : nationalAverageQuarterData;
-        //
-        // this.setState({
-        //     data: newData,
-        //     average: newAverage,
-        //     labels: newLabels
-        // })
-    }
+    ToggleButton() {
+        this.getRevenueSegmentsData(this.state.toggleOn);
+        this.setState(currentState => ({
+            toggleOn: !currentState.toggleOn,
+        }));
+    };
 
     getStockInformation() {
         loadQuotesForStock(SQ.symbol).then(res => {
@@ -106,17 +99,34 @@ class SquareDashboard extends Component {
         });
     }
 
-    getRevenueSegmentsData() {
-        const data = {
-            labels: SQ.quarterLabels,
-            datasets: [
-                setBarDataValues('Transactional Revenue', SQ.transactionRevenue, Color.BLUE),
-                setBarDataValues('Service Revenue', SQ.serviceRevenue, Color.RED),
-                setBarDataValues('Hardware Revenue', SQ.hardwareRevenue, Color.SILVER),
-                setBarDataValues('Bitcoin Revenue', SQ.bitcoinRevenue, Color.ORANGE),
-                setLineDataValues('Total Revenue', this.state.totalRevenue, Color.BLACK),
-            ],
-        };
+    getRevenueSegmentsData(isAnnual) {
+        let data = {};
+        if(isAnnual) {
+            data = {
+                labels: _.takeRight(SQ.quarterLabels, SQ.quarterLabels.length - 4),
+                datasets:
+                    [
+                        setBarDataValues('Transactional Revenue', annualizeNumbers(SQ.transactionRevenue), Color.BLUE),
+                        setBarDataValues('Service Revenue', annualizeNumbers(SQ.serviceRevenue), Color.RED),
+                        setBarDataValues('Hardware Revenue', annualizeNumbers(SQ.hardwareRevenue), Color.SILVER),
+                        setBarDataValues('Bitcoin Revenue', annualizeNumbers(SQ.bitcoinRevenue), Color.ORANGE),
+                        setLineDataValues('Total Revenue', annualizeNumbers(this.state.totalRevenue), Color.BLACK),
+                    ],
+            }
+        } else {
+            data = {
+                labels: SQ.quarterLabels,
+                datasets: [
+                    setBarDataValues('Transactional Revenue', SQ.transactionRevenue, Color.BLUE),
+                    setBarDataValues('Service Revenue', SQ.serviceRevenue, Color.RED),
+                    setBarDataValues('Hardware Revenue', SQ.hardwareRevenue, Color.SILVER),
+                    setBarDataValues('Bitcoin Revenue', SQ.bitcoinRevenue, Color.ORANGE),
+                    setLineDataValues('Total Revenue', this.state.totalRevenue, Color.BLACK),
+                ],
+            };
+        }
+
+        console.log(SQ.transactionRevenue);
 
         this.setState( prevState => {
             let options = _.cloneDeep(prevState.options);
@@ -272,18 +282,19 @@ class SquareDashboard extends Component {
                 </header>
 
                 <div className={classes.buttonContainer}>
-                    <button value="annual" onClick={this.handleButtonClick}> Annual </button>
+                    <button onClick={()=>this.ToggleButton()}> Annual </button>
+                    {!this.state.toggleOn && this.props.text}
                 </div>
 
-                <BarChart chartData={this.state[GraphNames.STOCK]} options={this.state[GraphNames.STOCK_OPTIONS]}/>
+                {/*<BarChart chartData={this.state[GraphNames.STOCK]} options={this.state[GraphNames.STOCK_OPTIONS]}/>*/}
                 <BarChart chartData={this.state[GraphNames.REVENUE_SEGMENTS]} options={this.state[GraphNames.REVENUE_SEGMENTS_OPTIONS]}/>
-                <LineChart chartData={this.state[GraphNames.REVENUE_YOY]} options={this.state[GraphNames.REVENUE_YOY_OPTIONS]}/>
-                <LineChart chartData={this.state[GraphNames.GROSS_PROFIT_SEGMENTS]} options={this.state[GraphNames.GROSS_PROFIT_SEGMENTS_OPTIONS]}/>
-                <BarChart chartData={this.state[GraphNames.REVENUE_PERCENTAGE]} options={this.state[GraphNames.REVENUE_PERCENTAGE_OPTIONS]}/>
-                <BarChart chartData={this.state[GraphNames.REVENUE_OPERATIONS]} options={this.state[GraphNames.REVENUE_OPERATIONS_OPTIONS]}/>
-                <BarChart chartData={this.state[GraphNames.CASH]} options={this.state[GraphNames.CASH_OPTIONS]}/>
-                <BarChart chartData={this.state[GraphNames.FREE_CASH_FLOW]} options={this.state[GraphNames.FREE_CASH_FLOW_OPTIONS]}/>
-                <BarChart chartData={this.state[GraphNames.SHAREHOLDER_EQUITY]} options={this.state[GraphNames.SHAREHOLDER_EQUITY_OPTIONS]}/>
+                {/*<LineChart chartData={this.state[GraphNames.REVENUE_YOY]} options={this.state[GraphNames.REVENUE_YOY_OPTIONS]}/>*/}
+                {/*<LineChart chartData={this.state[GraphNames.GROSS_PROFIT_SEGMENTS]} options={this.state[GraphNames.GROSS_PROFIT_SEGMENTS_OPTIONS]}/>*/}
+                {/*<BarChart chartData={this.state[GraphNames.REVENUE_PERCENTAGE]} options={this.state[GraphNames.REVENUE_PERCENTAGE_OPTIONS]}/>*/}
+                {/*<BarChart chartData={this.state[GraphNames.REVENUE_OPERATIONS]} options={this.state[GraphNames.REVENUE_OPERATIONS_OPTIONS]}/>*/}
+                {/*<BarChart chartData={this.state[GraphNames.CASH]} options={this.state[GraphNames.CASH_OPTIONS]}/>*/}
+                {/*<BarChart chartData={this.state[GraphNames.FREE_CASH_FLOW]} options={this.state[GraphNames.FREE_CASH_FLOW_OPTIONS]}/>*/}
+                {/*<BarChart chartData={this.state[GraphNames.SHAREHOLDER_EQUITY]} options={this.state[GraphNames.SHAREHOLDER_EQUITY_OPTIONS]}/>*/}
             </div>
 
 
