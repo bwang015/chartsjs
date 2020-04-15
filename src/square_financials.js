@@ -72,7 +72,8 @@ const bitcoinRevenue = [
     177567
 ];
 
-const quarterLabels = [Q.Q1_17,
+const quarterLabels = [
+    Q.Q1_17,
     Q.Q2_17,
     Q.Q3_17,
     Q.Q4_17,

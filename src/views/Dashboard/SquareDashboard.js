@@ -28,31 +28,45 @@ import {
 } from "../../utils/graph_helper";
 import { loadQuotesForStock } from "../../api/iex";
 import 'chartjs-plugin-annotation';
+import RevenueSegments from "../Widget/RevenueSegments";
 
 class SquareDashboard extends Component {
     constructor(props) {
         super(props);
 
+        const revenue = {
+            'Transactional Revenue': SQ.transactionRevenue,
+            'Service Revenue': SQ.serviceRevenue,
+            'Hardware Revenue': SQ.hardwareRevenue,
+            'Bitcoin Revenue': SQ.bitcoinRevenue,
+        };
+
+        const essentials = {
+            labels: SQ.quarterLabels,
+            units: SQ.units,
+        };
+
         this.state = {
             options: Options,
             annotations: Annotation,
             symbol: SQ.symbol,
+            revenue: revenue,
+            essentials: essentials,
             totalRevenue: SQ.getTotalRevenue(),
         };
     }
 
-    componentDidMount() {
-        this.getRevenueSegmentsData();
-        this.getRevenueYOYData();
-        this.getGrossProfitData();
-        this.getRevenueBySegmentPercentageData();
-        this.getRevenueYOYData();
-        this.getRevenueOperatingIncomeExpensesData();
-        this.getCashAndDebt();
-        this.getFreeCashFlow();
-        this.getShareholderEquityData();
-        this.getStockInformation();
-    }
+    // componentDidMount() {
+    //     this.getRevenueYOYData();
+    //     this.getGrossProfitData();
+    //     this.getRevenueBySegmentPercentageData();
+    //     this.getRevenueYOYData();
+    //     this.getRevenueOperatingIncomeExpensesData();
+    //     this.getCashAndDebt();
+    //     this.getFreeCashFlow();
+    //     this.getShareholderEquityData();
+    //     this.getStockInformation();
+    // }
 
     getStockInformation() {
         loadQuotesForStock(SQ.symbol).then(res => {
@@ -85,30 +99,6 @@ class SquareDashboard extends Component {
             });
         }).catch(error => {
             console.log(error);
-        });
-    }
-
-    getRevenueSegmentsData() {
-        const data = {
-            labels: SQ.quarterLabels,
-            datasets: [
-                setBarDataValues('Transactional Revenue', SQ.transactionRevenue, Color.BLUE),
-                setBarDataValues('Service Revenue', SQ.serviceRevenue, Color.RED),
-                setBarDataValues('Hardware Revenue', SQ.hardwareRevenue, Color.SILVER),
-                setBarDataValues('Bitcoin Revenue', SQ.bitcoinRevenue, Color.ORANGE),
-                setLineDataValues('Total Revenue', this.state.totalRevenue, Color.BLACK),
-            ],
-        };
-
-        this.setState( prevState => {
-            let options = _.cloneDeep(prevState.options);
-            setGraphTitle(options, 'Revenue By Segments');
-            setAxesLabel(options, `In ${SQ.units}`);
-            stackGraphs(options);
-            return {
-                [GraphNames.REVENUE_SEGMENTS]: data,
-                [GraphNames.REVENUE_SEGMENTS_OPTIONS]: options,
-            };
         });
     }
 
@@ -248,15 +238,15 @@ class SquareDashboard extends Component {
     render() {
         return (
             <div className="App">
-                <BarChart chartData={this.state[GraphNames.STOCK]} options={this.state[GraphNames.STOCK_OPTIONS]}/>
-                <BarChart chartData={this.state[GraphNames.REVENUE_SEGMENTS]} options={this.state[GraphNames.REVENUE_SEGMENTS_OPTIONS]}/>
-                <LineChart chartData={this.state[GraphNames.REVENUE_YOY]} options={this.state[GraphNames.REVENUE_YOY_OPTIONS]}/>
-                <LineChart chartData={this.state[GraphNames.GROSS_PROFIT_SEGMENTS]} options={this.state[GraphNames.GROSS_PROFIT_SEGMENTS_OPTIONS]}/>
-                <BarChart chartData={this.state[GraphNames.REVENUE_PERCENTAGE]} options={this.state[GraphNames.REVENUE_PERCENTAGE_OPTIONS]}/>
-                <BarChart chartData={this.state[GraphNames.REVENUE_OPERATIONS]} options={this.state[GraphNames.REVENUE_OPERATIONS_OPTIONS]}/>
-                <BarChart chartData={this.state[GraphNames.CASH]} options={this.state[GraphNames.CASH_OPTIONS]}/>
-                <BarChart chartData={this.state[GraphNames.FREE_CASH_FLOW]} options={this.state[GraphNames.FREE_CASH_FLOW_OPTIONS]}/>
-                <BarChart chartData={this.state[GraphNames.SHAREHOLDER_EQUITY]} options={this.state[GraphNames.SHAREHOLDER_EQUITY_OPTIONS]}/>
+                <RevenueSegments revenue={this.state.revenue} totalRevenue={this.state.totalRevenue} essentials={this.state.essentials}/>
+                {/*<BarChart chartData={this.state[GraphNames.STOCK]} options={this.state[GraphNames.STOCK_OPTIONS]}/>*/}
+                {/*<LineChart chartData={this.state[GraphNames.REVENUE_YOY]} options={this.state[GraphNames.REVENUE_YOY_OPTIONS]}/>*/}
+                {/*<LineChart chartData={this.state[GraphNames.GROSS_PROFIT_SEGMENTS]} options={this.state[GraphNames.GROSS_PROFIT_SEGMENTS_OPTIONS]}/>*/}
+                {/*<BarChart chartData={this.state[GraphNames.REVENUE_PERCENTAGE]} options={this.state[GraphNames.REVENUE_PERCENTAGE_OPTIONS]}/>*/}
+                {/*<BarChart chartData={this.state[GraphNames.REVENUE_OPERATIONS]} options={this.state[GraphNames.REVENUE_OPERATIONS_OPTIONS]}/>*/}
+                {/*<BarChart chartData={this.state[GraphNames.CASH]} options={this.state[GraphNames.CASH_OPTIONS]}/>*/}
+                {/*<BarChart chartData={this.state[GraphNames.FREE_CASH_FLOW]} options={this.state[GraphNames.FREE_CASH_FLOW_OPTIONS]}/>*/}
+                {/*<BarChart chartData={this.state[GraphNames.SHAREHOLDER_EQUITY]} options={this.state[GraphNames.SHAREHOLDER_EQUITY_OPTIONS]}/>*/}
             </div>
         );
     }
