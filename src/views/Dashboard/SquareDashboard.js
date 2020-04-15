@@ -28,6 +28,8 @@ import {
 } from "../../utils/graph_helper";
 import { loadQuotesForStock } from "../../api/iex";
 import 'chartjs-plugin-annotation';
+import chartIcon from "../../assets/chart-icon.svg";
+import classes from "./Dashboard.module.css";
 
 class SquareDashboard extends Component {
     constructor(props) {
@@ -52,6 +54,22 @@ class SquareDashboard extends Component {
         this.getFreeCashFlow();
         this.getShareholderEquityData();
         this.getStockInformation();
+    }
+
+    handleButtonClick = e => {
+        alert("Hello World!");
+        // const { value } = e.target;
+        // const isAnnual = value === "annual";
+        //
+        // const newData = isAnnual ? managerData : managerQuarterData;
+        // const newLabels = isAnnual ? yearLabels : quarterLabels;
+        // const newAverage = isAnnual ? nationalAverageData : nationalAverageQuarterData;
+        //
+        // this.setState({
+        //     data: newData,
+        //     average: newAverage,
+        //     labels: newLabels
+        // })
     }
 
     getStockInformation() {
@@ -136,7 +154,7 @@ class SquareDashboard extends Component {
     getRevenueBySegmentPercentageData() {
         this.setState(prevState => {
             let options = _.cloneDeep(prevState.options);
-            setGraphTitle(options, 'Gross Revenue Margins by Segments');
+            setGraphTitle(options, 'Revenue Percentages by Segments');
             setAxesLabel(options, 'Percentage (%)');
             return {
                 [GraphNames.REVENUE_PERCENTAGE]: {
@@ -247,7 +265,16 @@ class SquareDashboard extends Component {
 
     render() {
         return (
-            <div className="App">
+            <div className={classes.container}>
+                <header>
+                    <img src={chartIcon} alt="bar chart icon"/>
+                    <h1>Square Financials Dashboard</h1>
+                </header>
+
+                <div className={classes.buttonContainer}>
+                    <button value="annual" onClick={this.handleButtonClick}> Annual </button>
+                </div>
+
                 <BarChart chartData={this.state[GraphNames.STOCK]} options={this.state[GraphNames.STOCK_OPTIONS]}/>
                 <BarChart chartData={this.state[GraphNames.REVENUE_SEGMENTS]} options={this.state[GraphNames.REVENUE_SEGMENTS_OPTIONS]}/>
                 <LineChart chartData={this.state[GraphNames.REVENUE_YOY]} options={this.state[GraphNames.REVENUE_YOY_OPTIONS]}/>
@@ -258,6 +285,8 @@ class SquareDashboard extends Component {
                 <BarChart chartData={this.state[GraphNames.FREE_CASH_FLOW]} options={this.state[GraphNames.FREE_CASH_FLOW_OPTIONS]}/>
                 <BarChart chartData={this.state[GraphNames.SHAREHOLDER_EQUITY]} options={this.state[GraphNames.SHAREHOLDER_EQUITY_OPTIONS]}/>
             </div>
+
+
         );
     }
 }

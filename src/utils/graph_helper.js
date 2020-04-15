@@ -4,6 +4,7 @@ import {Annotation} from "./common_objects";
 
 export const setGraphTitle = function (options, title) {
     _.set(options, GraphNames.TITLE, title);
+    _.set(options, 'title.fontSize', 24);
     return options;
 };
 
