@@ -45,7 +45,7 @@ class GrossProfitMargins extends Component {
             return dataArray.push(setLineDataValues(key, getGrossProfit(obj.revenue, obj.costOfGoods), obj.color))
         });
 
-        dataArray.push(setLineDataValues('Total Revenue', getGrossProfit(this.state.totalRevenue, this.state.totalCostOfGoods), Color.BLACK));
+        dataArray.push(setLineDataValues('Total Gross Profit', getGrossProfit(this.state.totalRevenue, this.state.totalCostOfGoods), Color.BLACK));
         const data = {
             labels: this.state.essentials.labels,
             datasets: dataArray,

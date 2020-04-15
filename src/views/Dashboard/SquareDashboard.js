@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import { SQ } from "../../square_financials";
 import _ from "lodash";
 import {
-    getRevenuePercentage,
     getFreeCashFlow,
     getShareholderEquity,
 } from "../../utils/common_utils";
@@ -18,6 +17,8 @@ import RevenueMultiplierGraph from "../Widget/RevenueMultiplierGraph";
 import RevenueGrowthYOY from "../Widget/RevenueGrowthYOY";
 import GrossProfitMargins from "../Widget/GrossProfitMargins";
 import OperatingIncomeAndExpenses from "../Widget/OperatingIncomeAndExpenses";
+import RevenueByPercentages from "../Widget/RevenueByPercentages";
+import CashDebtGraphs from "../Widget/CashDebtGraphs";
 
 class SquareDashboard extends Component {
     constructor(props) {
@@ -49,6 +50,7 @@ class SquareDashboard extends Component {
             grossProfit: this.getGrossProfit(),
             totalRevenue: SQ.getTotalRevenue(),
             operationNumbers: this.getRevenueOperatingNumbers(),
+            cash: this.getCashNumbers(),
             totalCostOfGoods: SQ.totalCostOfGoods,
         };
     }
@@ -138,42 +140,22 @@ class SquareDashboard extends Component {
         }
     };
 
-    getRevenueBySegmentPercentageData() {
-        this.setState(prevState => {
-            let options = _.cloneDeep(prevState.options);
-            setGraphTitle(options, 'Gross Revenue Margins by Segments');
-            setAxesLabel(options, 'Percentage (%)');
-            return {
-                [GraphNames.REVENUE_PERCENTAGE]: {
-                    labels: SQ.quarterLabels,
-                    datasets: [
-                        setBarDataValues('Transactional Revenue', getRevenuePercentage(SQ.transactionRevenue, this.state.totalRevenue), Color.BLUE),
-                        setBarDataValues('Service Revenue', getRevenuePercentage(SQ.serviceRevenue, this.state.totalRevenue), Color.RED),
-                        setBarDataValues('Hardware Revenue', getRevenuePercentage(SQ.hardwareRevenue, this.state.totalRevenue), Color.SILVER),
-                        setBarDataValues('Bitcoin Revenue', getRevenuePercentage(SQ.bitcoinRevenue, this.state.totalRevenue), Color.ORANGE),
-                    ],
-                },
-                [GraphNames.REVENUE_PERCENTAGE_OPTIONS]: options,
-            };
-        });
-    }
-
-    getCashAndDebt() {
-        let options = _.cloneDeep(Options);
-        setGraphTitle(options, 'Cash and Debt');
-        setAxesLabel(options, 'In ' + SQ.units);
-        this.setState({
-            [GraphNames.CASH]: {
-                labels: SQ.quarterLabels,
-                datasets: [
-                    setBarDataValues('Cash and Cash Equivalents', SQ.cash, Color.BLUE),
-                    setBarDataValues('Short Term Debt', SQ.currentDebt, Color.RED),
-                    setBarDataValues('Long Term Debt', SQ.longTermDebt, Color.SILVER),
-                ],
+    getCashNumbers = () => {
+        return {
+            'Cash and Cash Equivalents': {
+                data: SQ.cash,
+                color: Color.BLUE,
             },
-            [GraphNames.CASH_OPTIONS]: options,
-        });
-    }
+            'Short Term Debt': {
+                data: SQ.currentDebt,
+                color: Color.RED,
+            },
+            'Long Term Debt': {
+                data: SQ.longTermDebt,
+                color: Color.SILVER,
+            }
+        };
+    };
 
     getFreeCashFlow() {
         let options = _.cloneDeep(Options);
@@ -219,8 +201,8 @@ class SquareDashboard extends Component {
                 <RevenueGrowthYOY essentials={this.state.essentials} revenueYOY={this.state.revenueYOY} totalRevenue={this.state.totalRevenue}/>
                 <GrossProfitMargins essentials={this.state.essentials} totalRevenue={this.state.totalRevenue} grossProfit={this.state.grossProfit} totalCostOfGoods={this.state.totalCostOfGoods}/>
                 <OperatingIncomeAndExpenses essentials={this.state.essentials} totalRevenue={this.state.totalRevenue} operationNumbers={this.state.operationNumbers}/>
-                {/*<BarChart chartData={this.state[GraphNames.REVENUE_PERCENTAGE]} options={this.state[GraphNames.REVENUE_PERCENTAGE_OPTIONS]}/>*/}
-                {/*<BarChart chartData={this.state[GraphNames.CASH]} options={this.state[GraphNames.CASH_OPTIONS]}/>*/}
+                <RevenueByPercentages essentials={this.state.essentials} totalRevenue={this.state.totalRevenue} revenue={this.state.revenue}/>
+                <CashDebtGraphs essentials={this.state.essentials} cash={this.state.cash}/>
                 {/*<BarChart chartData={this.state[GraphNames.FREE_CASH_FLOW]} options={this.state[GraphNames.FREE_CASH_FLOW_OPTIONS]}/>*/}
                 {/*<BarChart chartData={this.state[GraphNames.SHAREHOLDER_EQUITY]} options={this.state[GraphNames.SHAREHOLDER_EQUITY_OPTIONS]}/>*/}
             </div>
