@@ -62,13 +62,13 @@ class RevenueMultiplierGraph extends Component {
             setOwnedStockPriceAnnotation(this.state.stockInfo.currentStockPrice, options);
 
             this.setState({
-                [GraphNames.STOCK]: {
+                chartData: {
                     labels: [`Current vs Peak Revenue Multiplier: [${priceToSales}x, ${peakPriceToSales}x]`],
                     datasets: [
                         setBarDataValues('Stock Price', [price], Color.BLUE),
                     ],
                 },
-                [GraphNames.STOCK_OPTIONS]: options,
+                options: options,
             });
         }).catch(error => {
             console.log(error);
@@ -78,7 +78,7 @@ class RevenueMultiplierGraph extends Component {
     render() {
         return (
             <div className="chart">
-                <BarChart chartData={this.state[GraphNames.STOCK]} options={this.state[GraphNames.STOCK_OPTIONS]}/>
+                <BarChart chartData={this.state.chartData} options={this.state.options}/>
             </div>
         )
     }

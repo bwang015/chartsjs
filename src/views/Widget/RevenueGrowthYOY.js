@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Color, GraphNames} from "../../utils/enums";
+import {Color} from "../../utils/enums";
 import LineChart from "../../components/LineChart";
 import {
     setAxesLabel,
@@ -63,15 +63,15 @@ class RevenueGrowthYOY extends Component {
         };
 
         this.setState({
-            [GraphNames.REVENUE_YOY]: data,
-            [GraphNames.REVENUE_YOY_OPTIONS]: options,
+            chartData: data,
+            options: options,
         });
     }
 
     render() {
         return (
             <div className="chart">
-                <LineChart chartData={this.state[GraphNames.REVENUE_YOY]} options={this.state[GraphNames.REVENUE_YOY_OPTIONS]}/>
+                <LineChart chartData={this.state.chartData} options={this.state.options}/>
             </div>
         )
     }

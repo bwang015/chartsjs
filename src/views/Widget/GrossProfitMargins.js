@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Color, GraphNames} from "../../utils/enums";
+import {Color} from "../../utils/enums";
 import {setAxesLabel, setGraphTitle, setLineDataValues} from "../../utils/graph_helper";
 import _ from "lodash";
 import {Options} from "../../utils/common_objects";
@@ -41,7 +41,6 @@ class GrossProfitMargins extends Component {
 
         keys.forEach(key => {
             const obj = this.state.grossProfit[key];
-            console.log(obj);
             return dataArray.push(setLineDataValues(key, getGrossProfit(obj.revenue, obj.costOfGoods), obj.color))
         });
 
@@ -55,15 +54,15 @@ class GrossProfitMargins extends Component {
         setGraphTitle(options, 'Gross Revenue Margins by Segments');
         setAxesLabel(options, `Percentage (%)`);
         this.setState({
-            [GraphNames.GROSS_PROFIT_SEGMENTS]: data,
-            [GraphNames.GROSS_PROFIT_SEGMENTS_OPTIONS]: options
+            chartData: data,
+            options: options
         });
     }
 
     render() {
         return (
             <div className="chart">
-                <LineChart chartData={this.state[GraphNames.GROSS_PROFIT_SEGMENTS]} options={this.state[GraphNames.GROSS_PROFIT_SEGMENTS_OPTIONS]}/>
+                <LineChart chartData={this.state.chartData} options={this.state.options}/>
             </div>
         )
     }

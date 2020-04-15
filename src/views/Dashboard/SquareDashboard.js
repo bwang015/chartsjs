@@ -1,24 +1,15 @@
 import React, {Component} from 'react';
-import { SQ } from "../../square_financials";
-import _ from "lodash";
-import {
-    getFreeCashFlow,
-    getShareholderEquity,
-} from "../../utils/common_utils";
-import { Color, GraphNames } from "../../utils/enums";
-import {Annotation, Options} from "../../utils/common_objects";
-import {
-    setGraphTitle,
-    setAxesLabel,
-    setBarDataValues,
-} from "../../utils/graph_helper";
+import {SQ} from "../../square_financials";
+import {Color} from "../../utils/enums";
 import RevenueSegments from "../Widget/RevenueSegments";
 import RevenueMultiplierGraph from "../Widget/RevenueMultiplierGraph";
 import RevenueGrowthYOY from "../Widget/RevenueGrowthYOY";
 import GrossProfitMargins from "../Widget/GrossProfitMargins";
 import OperatingIncomeAndExpenses from "../Widget/OperatingIncomeAndExpenses";
 import RevenueByPercentages from "../Widget/RevenueByPercentages";
-import CashDebtGraphs from "../Widget/CashDebtGraphs";
+import FreeCashFlow from "../Widget/FreeCashFlow";
+import ShareholderEquityGraph from "../Widget/ShareholderEquityGraph";
+import CashGraph from "../Widget/CashGraph";
 
 class SquareDashboard extends Component {
     constructor(props) {
@@ -39,8 +30,6 @@ class SquareDashboard extends Component {
         };
 
         this.state = {
-            options: Options,
-            annotations: Annotation,
             symbol: SQ.symbol,
             revenue: this.getRevenue(),
             essentials: essentials,
@@ -51,6 +40,8 @@ class SquareDashboard extends Component {
             totalRevenue: SQ.getTotalRevenue(),
             operationNumbers: this.getRevenueOperatingNumbers(),
             cash: this.getCashNumbers(),
+            freeCashFlow: this.getFreeCashFlow(),
+            equity: this.getShareHolderEquity(),
             totalCostOfGoods: SQ.totalCostOfGoods,
         };
     }
@@ -152,59 +143,49 @@ class SquareDashboard extends Component {
             },
             'Long Term Debt': {
                 data: SQ.longTermDebt,
-                color: Color.SILVER,
+                color: Color.ORANGE,
             }
         };
     };
 
-    getFreeCashFlow() {
-        let options = _.cloneDeep(Options);
-        setGraphTitle(options, 'Free Cash Flow');
-        setAxesLabel(options, 'In ' + SQ.units);
-        this.setState({
-            [GraphNames.FREE_CASH_FLOW]: {
-                labels: SQ.quarterLabels,
-                datasets: [
-                    setBarDataValues('Cash From Operations', SQ.cashFromOperations, Color.BLUE),
-                    setBarDataValues('Cash From Investing', SQ.cashFromInvesting, Color.RED),
-                    setBarDataValues('Free Cash Flow', getFreeCashFlow(SQ.cashFromOperations, SQ.cashFromInvesting), Color.GREEN),
-                ],
+    getFreeCashFlow = () => {
+        return {
+            'Cash From Operations': {
+                data: SQ.cashFromOperations,
+                color: Color.BLUE,
             },
-            [GraphNames.FREE_CASH_FLOW_OPTIONS]: options,
-        });
-    }
-
-    getShareholderEquityData() {
-        let options = _.cloneDeep(Options);
-        setGraphTitle(options, 'Shareholder Equity');
-        setAxesLabel(options, 'In ' + SQ.units);
-        this.setState({
-            [GraphNames.SHAREHOLDER_EQUITY]: {
-                labels: SQ.quarterLabels,
-                datasets: [
-                    setBarDataValues('Total Assets', SQ.totalAssets, Color.BLUE),
-                    setBarDataValues('Total Liabilities', SQ.totalLiabilities, Color.RED),
-                    setBarDataValues('Shareholder Equity', getShareholderEquity(SQ.totalAssets, SQ.totalLiabilities), Color.BLACK),
-                ],
+            'Cash From Investing': {
+                data: SQ.cashFromInvesting,
+                color: Color.RED,
             },
-            [GraphNames.SHAREHOLDER_EQUITY_OPTIONS]: options
-        });
-    }
+        };
+    };
 
-
+    getShareHolderEquity = () => {
+        return {
+            'Total Assets': SQ.totalAssets,
+            'Total Liabilities': SQ.totalLiabilities,
+        }
+    };
 
     render() {
         return (
             <div className="App">
-                {/*<RevenueMultiplierGraph totalRevenue={this.state.totalRevenue} essentials={this.state.essentials} estimates={this.state.estimates} stockInfo={this.state.stockInfo}/>*/}
-                <RevenueSegments revenue={this.state.revenue} totalRevenue={this.state.totalRevenue} essentials={this.state.essentials}/>
-                <RevenueGrowthYOY essentials={this.state.essentials} revenueYOY={this.state.revenueYOY} totalRevenue={this.state.totalRevenue}/>
-                <GrossProfitMargins essentials={this.state.essentials} totalRevenue={this.state.totalRevenue} grossProfit={this.state.grossProfit} totalCostOfGoods={this.state.totalCostOfGoods}/>
-                <OperatingIncomeAndExpenses essentials={this.state.essentials} totalRevenue={this.state.totalRevenue} operationNumbers={this.state.operationNumbers}/>
-                <RevenueByPercentages essentials={this.state.essentials} totalRevenue={this.state.totalRevenue} revenue={this.state.revenue}/>
-                <CashDebtGraphs essentials={this.state.essentials} cash={this.state.cash}/>
-                {/*<BarChart chartData={this.state[GraphNames.FREE_CASH_FLOW]} options={this.state[GraphNames.FREE_CASH_FLOW_OPTIONS]}/>*/}
-                {/*<BarChart chartData={this.state[GraphNames.SHAREHOLDER_EQUITY]} options={this.state[GraphNames.SHAREHOLDER_EQUITY_OPTIONS]}/>*/}
+                <RevenueMultiplierGraph totalRevenue={this.state.totalRevenue} essentials={this.state.essentials} estimates={this.state.estimates} stockInfo={this.state.stockInfo}/>
+                <RevenueSegments revenue={this.state.revenue} totalRevenue={this.state.totalRevenue}
+                                 essentials={this.state.essentials}/>
+                <RevenueGrowthYOY essentials={this.state.essentials} revenueYOY={this.state.revenueYOY}
+                                  totalRevenue={this.state.totalRevenue}/>
+                <GrossProfitMargins essentials={this.state.essentials} totalRevenue={this.state.totalRevenue}
+                                    grossProfit={this.state.grossProfit}
+                                    totalCostOfGoods={this.state.totalCostOfGoods}/>
+                <OperatingIncomeAndExpenses essentials={this.state.essentials} totalRevenue={this.state.totalRevenue}
+                                            operationNumbers={this.state.operationNumbers}/>
+                <RevenueByPercentages essentials={this.state.essentials} totalRevenue={this.state.totalRevenue}
+                                      revenue={this.state.revenue}/>
+                <FreeCashFlow essentials={this.state.essentials} freeCashFlow={this.state.freeCashFlow}/>
+                <CashGraph essentials={this.state.essentials} cash={this.state.cash}/>
+                <ShareholderEquityGraph essentials={this.state.essentials} equity={this.state.equity}/>
             </div>
         );
     }

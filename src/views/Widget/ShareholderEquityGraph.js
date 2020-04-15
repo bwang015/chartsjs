@@ -1,27 +1,29 @@
 import React, {Component} from 'react';
-import {setAxesLabel, setBarDataValues, setGraphTitle} from "../../utils/graph_helper";
+import {Color} from "../../utils/enums";
+import {
+    setAxesLabel,
+    setBarDataValues,
+    setGraphTitle,
+} from "../../utils/graph_helper";
 import _ from "lodash";
 import {Options} from "../../utils/common_objects";
-import {getRevenuePercentage} from "../../utils/common_utils";
 import BarChart from "../../components/BarChart";
+import {getShareholderEquity} from "../../utils/common_utils";
 
-class RevenueByPercentages extends Component {
+class ShareholderEquityGraph extends Component {
     constructor(props) {
         super(props);
         this.state = {
             essentials: props.essentials,
-            totalRevenue: props.totalRevenue,
-            revenue: props.revenue,
+            equity: props.equity,
         }
     }
-
 
     static getDerivedStateFromProps(props, state) {
         if (props !== state) {
             return {
                 essentials: props.essentials,
-                totalRevenue: props.totalRevenue,
-                revenue: props.revenue,
+                equity: props.equity,
             };
         }
 
@@ -29,21 +31,19 @@ class RevenueByPercentages extends Component {
     }
 
     componentDidMount() {
-        this.getRevenueBySegmentPercentageData();
+        this.getShareholderEquityData();
     }
 
-    getRevenueBySegmentPercentageData() {
+    getShareholderEquityData() {
         let options = _.cloneDeep(Options);
-        setGraphTitle(options, 'Revenue Breakdown By Percent');
-        setAxesLabel(options, 'Percentage (%)');
+        setGraphTitle(options, 'Shareholder Equity');
+        setAxesLabel(options, `In ${this.state.essentials.units}`);
 
         let dataArray = [];
-        const keys = Object.keys(this.state.revenue);
 
-        keys.forEach(key => {
-            const obj = this.state.revenue[key];
-            return dataArray.push(setBarDataValues(key, getRevenuePercentage(obj.data, this.state.totalRevenue), obj.color));
-        });
+        dataArray.push(setBarDataValues('Total Assets', this.state.equity['Total Assets'], Color.BLUE));
+        dataArray.push(setBarDataValues('Total Liabilities', this.state.equity['Total Liabilities'], Color.RED));
+        dataArray.push(setBarDataValues('Shareholder Equity', getShareholderEquity(this.state.equity['Total Assets'], this.state.equity['Total Liabilities']), Color.GREEN));
 
         const data = {
             labels: this.state.essentials.labels,
@@ -52,7 +52,7 @@ class RevenueByPercentages extends Component {
 
         this.setState({
             chartData: data,
-            options: options,
+            options: options
         });
     }
 
@@ -66,4 +66,4 @@ class RevenueByPercentages extends Component {
     }
 }
 
-export default RevenueByPercentages;
+export default ShareholderEquityGraph;

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Color, GraphNames} from "../../utils/enums";
+import {Color} from "../../utils/enums";
 import {setAxesLabel, setBarDataValues, setGraphTitle} from "../../utils/graph_helper";
 import _ from "lodash";
 import {Options} from "../../utils/common_objects";
@@ -52,15 +52,15 @@ class OperatingIncomeAndExpenses extends Component {
         setGraphTitle(options, 'Revenue, Operating Income and Expenses, and Net Income');
         setAxesLabel(options, 'In ' + this.state.essentials.units);
         this.setState({
-            [GraphNames.REVENUE_OPERATIONS]: data,
-            [GraphNames.REVENUE_OPERATIONS_OPTIONS]: options,
+            chartData: data,
+            options: options,
         });
     }
 
     render() {
         return (
             <div className="chart">
-                <BarChart chartData={this.state[GraphNames.REVENUE_OPERATIONS]} options={this.state[GraphNames.REVENUE_OPERATIONS_OPTIONS]}/>
+                <BarChart chartData={this.state.chartData} options={this.state.options}/>
             </div>
         )
     }

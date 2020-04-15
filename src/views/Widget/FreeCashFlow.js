@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { GraphNames} from "../../utils/enums";
+import {Color} from "../../utils/enums";
 import {
     setAxesLabel,
     setBarDataValues,
@@ -8,13 +8,14 @@ import {
 import _ from "lodash";
 import {Options} from "../../utils/common_objects";
 import BarChart from "../../components/BarChart";
+import {getFreeCashFlow} from "../../utils/common_utils";
 
-class CashDebtGraphs extends Component {
+class FreeCashFlow extends Component {
     constructor(props) {
         super(props);
         this.state = {
             essentials: props.essentials,
-            cash: props.cash,
+            freeCashFlow: props.freeCashFlow,
         }
     }
 
@@ -22,7 +23,7 @@ class CashDebtGraphs extends Component {
         if (props !== state) {
             return {
                 essentials: props.essentials,
-                cash: props.cash,
+                freeCashFlow: props.freeCashFlow,
             };
         }
 
@@ -30,39 +31,45 @@ class CashDebtGraphs extends Component {
     }
 
     componentDidMount() {
-        this.getCashAndDebt();
+        this.getFreeCashFlowGraph();
     }
 
-    getCashAndDebt() {
+    getFreeCashFlowGraph() {
         let options = _.cloneDeep(Options);
-        setGraphTitle(options, 'Cash and Debt');
         setAxesLabel(options, `In ${this.state.essentials.units}`);
+        setGraphTitle(options, 'Free Cash Flow');
 
         let dataArray = [];
-        const keys = Object.keys(this.state.cash);
+        const keys = Object.keys(this.state.freeCashFlow);
 
         keys.forEach(key => {
-            const obj = this.state.cash[key];
+            const obj = this.state.freeCashFlow[key];
             dataArray.push(setBarDataValues(key, obj.data, obj.color))
         });
+
+        dataArray.push(setBarDataValues('Free Cash Flow',
+            getFreeCashFlow(this.state.freeCashFlow['Cash From Operations'].data, this.state.freeCashFlow['Cash From Investing'].data),
+            Color.GREEN));
+
         const data = {
             labels: this.state.essentials.labels,
             datasets: dataArray,
         };
 
         this.setState({
-            [GraphNames.CASH]: data,
-            [GraphNames.CASH_OPTIONS]: options,
+            chartData: data,
+            options: options,
         });
     }
 
     render() {
         return (
             <div className="chart">
-                <BarChart chartData={this.state[GraphNames.CASH]} options={this.state[GraphNames.CASH_OPTIONS]}/>
+                <BarChart chartData={this.state.chartData}
+                          options={this.state.options}/>
             </div>
         )
     }
 }
 
-export default CashDebtGraphs;
+export default FreeCashFlow;

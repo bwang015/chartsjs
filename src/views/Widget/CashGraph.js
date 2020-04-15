@@ -1,27 +1,27 @@
 import React, {Component} from 'react';
-import BarChart from "../../components/BarChart";
-import {Color} from "../../utils/enums";
-import {setAxesLabel, setBarDataValues, setGraphTitle, setLineDataValues, stackGraphs} from "../../utils/graph_helper";
+import {
+    setAxesLabel,
+    setBarDataValues,
+    setGraphTitle,
+} from "../../utils/graph_helper";
 import _ from "lodash";
 import {Options} from "../../utils/common_objects";
+import BarChart from "../../components/BarChart";
 
-class RevenueSegments extends Component {
+class CashGraph extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            revenue: props.revenue,
             essentials: props.essentials,
-            totalRevenue: props.totalRevenue,
+            cash: props.cash,
         }
     }
-
 
     static getDerivedStateFromProps(props, state) {
         if (props !== state) {
             return {
-                revenue: props.revenue,
                 essentials: props.essentials,
-                totalRevenue: props.totalRevenue,
+                cash: props.cash,
             };
         }
 
@@ -29,27 +29,27 @@ class RevenueSegments extends Component {
     }
 
     componentDidMount() {
-        this.getRevenueSegmentsData();
+        this.getCash();
     }
 
-    getRevenueSegmentsData() {
+    getCash() {
+        let options = _.cloneDeep(Options);
+        setGraphTitle(options, 'Cash and Debt');
+        setAxesLabel(options, `In ${this.state.essentials.units}`);
+
         let dataArray = [];
-        const keys = Object.keys(this.state.revenue);
+        const keys = Object.keys(this.state.cash);
 
         keys.forEach(key => {
-            const obj = this.state.revenue[key];
+            const obj = this.state.cash[key];
             dataArray.push(setBarDataValues(key, obj.data, obj.color))
         });
-        dataArray.push(setLineDataValues('Total Revenue', this.state.totalRevenue, Color.BLACK));
+
         const data = {
             labels: this.state.essentials.labels,
             datasets: dataArray,
         };
 
-        let options = _.cloneDeep(Options);
-        setGraphTitle(options, 'Revenue By Segments');
-        setAxesLabel(options, `In ${this.state.essentials.units}`);
-        stackGraphs(options);
         this.setState({
             chartData: data,
             options: options,
@@ -65,4 +65,4 @@ class RevenueSegments extends Component {
     }
 }
 
-export default RevenueSegments;
+export default CashGraph;
