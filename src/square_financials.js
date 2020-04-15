@@ -305,6 +305,8 @@ const getTotalRevenue = function() {
     return totalRevenue;
 };
 
+const symbol = "SQ";
+
 export const SQ = {
     getTotalRevenue,
     totalCostOfGoods,
@@ -328,4 +330,5 @@ export const SQ = {
     cashFromInvesting,
     totalAssets,
     totalLiabilities,
+    symbol,
 };

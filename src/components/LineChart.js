@@ -10,11 +10,16 @@ class LineChart extends Component {
         }
     }
 
-    static defaultProps = {
-        displayTitle: true,
-        displayLegend: true,
-        legendPosition: 'right',
-    };
+    static getDerivedStateFromProps(props, state) {
+        if (props.chartData !== state.chartData) {
+            return {
+                chartData: props.chartData,
+                options: props.options,
+            };
+        }
+
+        return null;
+    }
 
     render() {
         return (
